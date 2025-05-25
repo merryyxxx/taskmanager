@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Solutions - TechConsult Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-3d {
+            width: 50px;
+            height: 50px;
+            perspective: 200px;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate3d 10s infinite linear;
+        }
+
+        .face {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.7rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .face.front { transform: translateZ(25px); }
+        .face.back { transform: rotateY(180deg) translateZ(25px); }
+        .face.right { transform: rotateY(90deg) translateZ(25px); }
+        .face.left { transform: rotateY(-90deg) translateZ(25px); }
+        .face.top { transform: rotateX(90deg) translateZ(25px); }
+        .face.bottom { transform: rotateX(-90deg) translateZ(25px); }
+
+        @keyframes rotate3d {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .logo h1 {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a:hover, nav a.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 25px;
+            background: #333;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* Main Content */
+        main {
+            background: white;
+            margin-top: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,800 1000,1000"/><polygon fill="rgba(255,255,255,0.03)" points="0,800 1000,600 1000,800 0,1000"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.95;
+        }
+
+        /* Solutions Showcase */
+        .solutions-showcase {
+            padding: 100px 0;
+            background: linear-gradient(to bottom, #f8faff, #ffffff);
+        }
+
+        .solutions-showcase h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .solution-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .solution-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .solution-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .solution-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
+        }
+
+        .solution-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .solution-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .solution-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .solution-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .solution-features li {
+            padding: 0.5rem 0;
+            color: #555;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .solution-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .solution-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 10px;
+        }
+
+        /* Packages Section */
+        .packages {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .packages h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .package-card.popular {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(102, 126, 234, 0.2);
+        }
+
+        .package-badge {
+            position: absolute;
+            top: -1px;
+            right: 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0 0 15px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .package-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .package-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .package-price {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .currency {
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .period {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .package-features h4 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+
+        .package-features ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .package-features li {
+            padding: 0.7rem 0;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .package-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .package-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .comparison-table h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .info-table thead {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .info-table th,
+        .info-table td {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-table th {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .info-table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .info-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary,
+        .cta-secondary {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-primary {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.4);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cta-secondary:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #bbb;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .solutions-grid,
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .package-card.popular {
+                transform: none;
+            }
+
+            .package-card:hover {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .solution-card:nth-child(1) { animation-delay: 0.1s; }
+        .solution-card:nth-child(2) { animation-delay: 0.2s; }
+        .solution-card:nth-child(3) { animation-delay: 0.3s; }
+        .solution-card:nth-child(4) { animation-delay: 0.4s; }
+        .solution-card:nth-child(5) { animation-delay: 0.5s; }
+        .solution-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-3d" id="logo3d">
+                    <div class="cube">
+                        <div class="face front">TC</div>
+                        <div class="face back">PRO</div>
+                        <div class="face right">TECH</div>
+                        <div class="face left">CONS</div>
+                        <div class="face top">ULT</div>
+                        <div class="face bottom">ING</div>
+                    </div>
+                </div>
+                <h1>TechConsult Pro</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="solutions.html" class="active">Solutions</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="request-demo.html">Request Demo</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                </ul>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h2>Comprehensive Technology Solutions</h2>
+                        <p>Discover our range of innovative solutions designed to transform your business operations and drive digital success through cutting-edge technology.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="solutions-showcase">
+            <div class="container">
+                <h2>Our Solution Portfolio</h2>
+                
+                <div class="solutions-grid">
+                    <div class="solution-card fade-in" id="solution1">
+                        <div class="solution-icon">🌐</div>
+                        <h3>Web Development Solutions</h3>
+                        <p>Custom websites and web applications built with modern technologies for optimal performance and exceptional user experience.</p>
+                        <ul class="solution-features">
+                            <li>Responsive Design & Mobile-First Approach</li>
+                            <li>E-commerce Integration & Payment Gateways</li>
+                            <li>Advanced Content Management Systems</li>
+                            <li>Progressive Web Apps (PWA)</li>
+                            <li>SEO Optimization & Performance Tuning</li>
+                        </ul>
+                        <div class="solution-price">Starting from <strong>$2,999</strong></div>
+                    </div>
+
+                    <div class="solution-card fade-in" id="solution2">
+                        <div class="solution-icon">☁️</div>
+                        <h3>Cloud Infrastructure Solutions</h3>
+                        <p>Scalable cloud solutions that grow with your business needs while ensuring maximum security, reliability, and cost-effectiveness.</p>
+                        <ul class="solution-features">
+                            <li>Seamless Cloud Migration & Modernization</li>
+                            <li>Auto-scaling Infrastructure & Load Balancing</li>
+                            <li>Automated Backup & Disaster Recovery</li>
+                            <li>24/7 Infrastructure Monitoring & Alerts</li>
+                            <li>Multi-cloud & Hybrid Solutions</li>
+                        </ul>
+                        <div class="solution-price">Starting from <strong>$1,499/month</strong></div>
+                    </div>
+
+                    <div class="solution-card fade-in" id="solution3">
+                        <div class="solution-icon">🔒</div>
+                        <h3>Cybersecurity Solutions</h3>
+                        <p>Comprehensive security measures to protect your digital assets and ensure compliance with industry standards and regulations.</p>
+                        <ul class="solution-features">
+                            <li>Advanced Threat Assessment & Analysis</li>
+                            <li>Next-gen Firewall & Network Security</li>
+                            <li>Comprehensive Security Audits & Testing</li>
+                            <li>Employee Security Training & Awareness</li>
+                            <li>Compliance Management (GDPR, HIPAA, SOC2)</li>
+                        </ul>
+                        <div class="solution-price">Starting from <strong>$999/month</strong></div>
+                    </div>
+
+                    <div class="solution-card fade-in" id="solution4">
+                        <div class="solution-icon">📱</div>
+                        <h3>Mobile App Development</h3>
+                        <p>Native and cross-platform mobile applications that engage users and drive business growth across all devices and platforms.</p>
+                        <ul class="solution-features">
+                            <li>iOS & Android Native Development</li>
+                            <li>Cross-platform Solutions (React Native, Flutter)</li>
+                            <li>App Store Optimization & Marketing</li>
+                            <li>Push Notifications & Real-time Features</li>
+                            <li>App Analytics & Performance Monitoring</li>
+                        </ul>
+                        <div class="solution-price">Starting from <strong>$4,999</strong></div>
+                    </div>
+
+                    <div class="solution-card fade-in" id="solution5">
+                        <div class="solution-icon">📊</div>
+                        <h3>Data Analytics Solutions</h3>
+                        <p>Transform your raw data into actionable insights with our advanced analytics and business intelligence tools and dashboards.</p>
+                        <ul class="solution-features">
+                            <li>Interactive Data Visualization & Dashboards</li>
+                            <li>Predictive Analytics & Machine Learning</li>
+                            <li>Real-time Monitoring & Alert Systems</li>
+                            <li>Custom Reporting & KPI Tracking</li>
+                            <li>Data Integration & ETL Processes</li>
+                        </ul>
+                        <div class="solution-price">Starting from <strong>$1,999/month</strong></div>
+                    </div>
+
+                    <div class="solution-card fade-in" id="solution6">
+                        <div class="solution-icon">🤖</div>
+                        <h3>AI & Machine Learning</h3>
+                        <p>Leverage artificial intelligence to automate processes, enhance decision-making, and gain competitive advantages in your industry.</p>
+                        <ul class="solution-features">
+                            <li>Intelligent Process Automation & RPA</li>
+                            <li>Advanced Chatbot & Virtual Assistant Development</li>
+                            <li>Custom Predictive Models & Algorithms</li>
+                            <li>Natural Language Processing & Understanding</li>
+                            <li>Computer Vision & Image Recognition</li>
+                        </ul>
+                        <div class="solution-price">Starting from <strong>$5,999</strong></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="packages">
+            <div class="container">
+                <h2>Solution Packages</h2>
+                <p class="section-subtitle">Choose the perfect package that fits your business needs and budget. Each package is designed to deliver maximum value and ROI.</p>
+                
+                <div class="packages-grid">
+                    <div class="package-card starter" id="starter-package">
+                        <div class="package-header">
+                            <h3>Starter Package</h3>
+                            <div class="package-price">
+                                <span class="currency">$</span>
+                                <span class="amount">4,999</span>
+                                <span class="period">one-time</span>
+                            </div>
+                        </div>
+                        <div class="package-features">
+                            <h4>Perfect for Small Businesses</h4>
+                            <ul>
+                                <li>✅ Responsive Website (5 pages)</li>
+                                <li>✅ Basic SEO Optimization</li>
+                                <li>✅ Contact Form Integration</li>
+                                <li>✅ Social Media Integration</li>
+                                <li>✅ 3 Months Premium Support</li>
+                                <li>✅ Mobile Optimization</li>
+                                <li>✅ Basic Analytics Setup</li>
+                            </ul>
+                        </div>
+                        <a href="request-demo.html" class="package-btn">Get Started</a>
+                    </div>
+
+                    <div class="package-card professional popular" id="professional-package">
+                        <div class="package-badge">Most Popular</div>
+                        <div class="package-header">
+                            <h3>Professional Package</h3>
+                            <div class="package-price">
+                                <span class="currency">$</span>
+                                <span class="amount">9,999</span>
+                                <span class="period">one-time</span>
+                            </div>
+                        </div>
+                        <div class="package-features">
+                            <h4>Best for Growing Businesses</h4>
+                            <ul>
+                                <li>✅ Custom Web Application</li>
+                                <li>✅ Advanced E-commerce Functionality</li>
+                                <li>✅ Premium SEO & Analytics</li>
+                                <li>✅ Database Integration & Management</li>
+                                <li>✅ 6 Months Premium Support</li>
+                                <li>✅ Performance Optimization</li>
+                                <li>✅ Enhanced Security Features</li>
+                                <li>✅ Content Management System</li>
+                            </ul>
+                        </div>
+                        <a href="request-demo.html" class="package-btn">Get Started</a>
+                    </div>
+
+                    <div class="package-card enterprise" id="enterprise-package">
+                        <div class="package-header">
+                            <h3>Enterprise Package</h3>
+                            <div class="package-price">
+                                <span class="currency">$</span>
+                                <span class="amount">19,999</span>
+                                <span class="period">one-time</span>
+                            </div>
+                        </div>
+                        <div class="package-features">
+                            <h4>Complete Enterprise Solution</h4>
+                            <ul>
+                                <li>✅ Full-Stack Web Application</li>
+                                <li>✅ Enterprise Cloud Infrastructure Setup</li>
+                                <li>✅ Advanced Security Implementation</li>
+                                <li>✅ Custom API Development & Integration</li>
+                                <li>✅ 12 Months Premium Support</li>
+                                <li>✅ Advanced Performance Monitoring</li>
+                                <li>✅ Comprehensive Staff Training</li>
+                                <li>✅ Custom Analytics Dashboard</li>
+                                <li>✅ Priority Support & Maintenance</li>
+                            </ul>
+                        </div>
+                        <a href="request-demo.html" class="package-btn">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="comparison-table">
+            <div class="container">
+                <h2>Solution Comparison</h2>
+                <div class="table-container">
+                    <table class="info-table comparison">
+                        <thead>
+                            <tr>
+                                <th>Features</th>
+                                <th>Starter</th>
+                                <th>Professional</th>
+                                <th>Enterprise</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Website Pages</strong></td>
+                                <td>Up to 5</td>
+                                <td>Up to 15</td>
+                                <td>Unlimited</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Custom Design</strong></td>
+                                <td>✅ Basic</td>
+                                <td>✅ Advanced</td>
+                                <td>✅ Premium</td>
+                            </tr>
+                            <tr>
+                                <td><strong>E-commerce</strong></td>
+                                <td>❌</td>
+                                <td>✅ Basic</td>
+                                <td>✅ Advanced</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Database Integration</strong></td>
+                                <td>❌</td>
+                                <td>✅</td>
+                                <td>✅ Advanced</td>
+                            </tr>
+                            <tr>
+                                <td><strong>API Development</strong></td>
+                                <td>❌</td>
+                                <td>❌</td>
+                                <td>✅</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cloud Hosting</strong></td>
+                                <td>Basic</td>
+                                <td>Premium</td>
+                                <td>Enterprise</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Support Duration</strong></td>
+                                <td>3 Months</td>
+                                <td>6 Months</td>
+                                <td>12 Months</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Training Included</strong></td>
+                                <td>❌</td>
+                                <td>✅ Basic</td>
+                                <td>✅ Comprehensive</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Analytics & Reporting</strong></td>
+                                <td>Basic</td>
+                                <td>Advanced</td>
+                                <td>Custom Dashboard</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Security Features</strong></td>
+                                <td>Basic SSL</td>
+                                <td>Enhanced Security</td>
+                                <td>Enterprise Grade</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to Transform Your Business?</h2>
+                <p>Get started with our solutions today and see the difference professional technology consulting can make for your business growth and success.</p>
+                <div class="cta-buttons">
+                    <a href="request-demo.html" class="cta-primary">Request Free Demo</a>
+                    <a href="services.html" class="cta-secondary">View Services</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TechConsult Pro</h3>
+                    <p>Your trusted partner for digital transformation and technology solutions that drive real business results.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="solutions.html">Solutions</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="request-demo.html">Request Demo</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p>Email: info@techconsultpro.com</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                    <p>Available: Mon-Fri 9AM-6PM EST</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TechConsult Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all solution cards and package cards
+        document.querySelectorAll('.solution-card, .package-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Add hover effects for package cards
+        document.querySelectorAll('.package-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (this.classList.contains('popular')) {
+                    this.style.transform = 'scale(1.05)';
+                } else {
+                    this.style.transform = 'translateY(0) scale(1)';
+                }
+            });
+        });
+
+        // Add click tracking for analytics (placeholder)
+        document.querySelectorAll('.package-btn, .cta-primary, .cta-secondary').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Analytics tracking would go here
+                console.log('Button clicked:', this.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
