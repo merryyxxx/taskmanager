@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - TechConsult Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-3d {
+            perspective: 1000px;
+            width: 60px;
+            height: 60px;
+        }
+
+        .cube {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: rotate 10s infinite linear;
+        }
+
+        .face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .face.front { transform: rotateY(0deg) translateZ(30px); }
+        .face.back { transform: rotateY(180deg) translateZ(30px); }
+        .face.right { transform: rotateY(90deg) translateZ(30px); }
+        .face.left { transform: rotateY(-90deg) translateZ(30px); }
+        .face.top { transform: rotateX(90deg) translateZ(30px); }
+        .face.bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+        @keyframes rotate {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 100px;
+        }
+
+        /* Hero Section */
+        .page-header {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-header p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Services Grid */
+        .services-overview {
+            padding: 80px 0;
+        }
+
+        .services-intro {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .services-intro h2 {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .services-intro p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .service-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .service-card h3 {
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .service-card p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .service-features li {
+            color: rgba(255,255,255,0.8);
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4ecdc4;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+
+        .service-price {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Process Section */
+        .service-process {
+            padding: 80px 0;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            margin: 40px 20px;
+            border-radius: 20px;
+        }
+
+        .service-process h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 60px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .process-step h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .process-step p {
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
+        }
+
+        /* Benefits Section */
+        .service-benefits {
+            padding: 80px 0;
+        }
+
+        .service-benefits h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 60px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .benefit-item {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .benefit-item h4 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .benefit-item p {
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-content {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 60px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 18px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3,
+        .footer-section h4 {
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .footer-section p,
+        .footer-section li {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #4ecdc4;
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation delays for staggered effects */
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+        .service-card:nth-child(5) { animation-delay: 0.5s; }
+        .service-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .process-step:nth-child(1) { animation-delay: 0.2s; }
+        .process-step:nth-child(2) { animation-delay: 0.4s; }
+        .process-step:nth-child(3) { animation-delay: 0.6s; }
+        .process-step:nth-child(4) { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-3d" id="logo3d">
+                    <div class="cube">
+                        <div class="face front">TC</div>
+                        <div class="face back">PRO</div>
+                        <div class="face right">TECH</div>
+                        <div class="face left">CONS</div>
+                        <div class="face top">ULT</div>
+                        <div class="face bottom">ING</div>
+                    </div>
+                </div>
+                <h1>TechConsult Pro</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../consultantsite.html">Home</a></li>
+                    <li><a href="solutions.html">Solutions</a></li>
+                    <li><a href="services.html" class="active">Services</a></li>
+                    <li><a href="request-demo.html">Request Demo</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                </ul>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Our Professional Services</h1>
+                <p>Comprehensive technology services tailored to your business needs</p>
+            </div>
+        </section>
+
+        <section class="services-overview">
+            <div class="container">
+                <div class="services-intro">
+                    <h2>What We Offer</h2>
+                    <p>At TechConsult Pro, we provide end-to-end technology services designed to accelerate your digital transformation. Our team of experts delivers professional, reliable, and innovative solutions that drive business growth.</p>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card" id="service1">
+                        <div class="service-icon">💻</div>
+                        <h3>Web Development</h3>
+                        <p>Custom websites and web applications built with modern technologies. Responsive design, fast loading times, and optimized for search engines.</p>
+                        <ul class="service-features">
+                            <li>Responsive Design</li>
+                            <li>E-commerce Solutions</li>
+                            <li>Content Management Systems</li>
+                            <li>Performance Optimization</li>
+                        </ul>
+                        <div class="service-price">Starting at $2,500</div>
+                    </div>
+
+                    <div class="service-card" id="service2">
+                        <div class="service-icon">☁️</div>
+                        <h3>Cloud Migration</h3>
+                        <p>Seamless migration of your infrastructure to cloud platforms. Improve scalability, reduce costs, and enhance security with our cloud expertise.</p>
+                        <ul class="service-features">
+                            <li>AWS/Azure/Google Cloud</li>
+                            <li>Data Migration</li>
+                            <li>Security Configuration</li>
+                            <li>Performance Monitoring</li>
+                        </ul>
+                        <div class="service-price">Starting at $5,000</div>
+                    </div>
+
+                    <div class="service-card" id="service3">
+                        <div class="service-icon">📱</div>
+                        <h3>Mobile App Development</h3>
+                        <p>Native and cross-platform mobile applications for iOS and Android. User-friendly interfaces with robust backend integration.</p>
+                        <ul class="service-features">
+                            <li>iOS & Android Apps</li>
+                            <li>Cross-platform Solutions</li>
+                            <li>UI/UX Design</li>
+                            <li>App Store Deployment</li>
+                        </ul>
+                        <div class="service-price">Starting at $8,000</div>
+                    </div>
+
+                    <div class="service-card" id="service4">
+                        <div class="service-icon">🔒</div>
+                        <h3>Cybersecurity Consulting</h3>
+                        <p>Protect your business with comprehensive security assessments, implementation of security protocols, and ongoing monitoring services.</p>
+                        <ul class="service-features">
+                            <li>Security Audits</li>
+                            <li>Penetration Testing</li>
+                            <li>Compliance Management</li>
+                            <li>24/7 Security Monitoring</li>
+                        </ul>
+                        <div class="service-price">Starting at $3,000</div>
+                    </div>
+
+                    <div class="service-card" id="service5">
+                        <div class="service-icon">📊</div>
+                        <h3>Data Analytics</h3>
+                        <p>Transform your data into actionable insights with advanced analytics, reporting dashboards, and business intelligence solutions.</p>
+                        <ul class="service-features">
+                            <li>Business Intelligence</li>
+                            <li>Custom Dashboards</li>
+                            <li>Predictive Analytics</li>
+                            <li>Data Visualization</li>
+                        </ul>
+                        <div class="service-price">Starting at $4,000</div>
+                    </div>
+
+                    <div class="service-card" id="service6">
+                        <div class="service-icon">🛠️</div>
+                        <h3>IT Support & Maintenance</h3>
+                        <p>Ongoing technical support and maintenance services to keep your systems running smoothly. Proactive monitoring and rapid issue resolution.</p>
+                        <ul class="service-features">
+                            <li>24/7 Help Desk</li>
+                            <li>System Monitoring</li>
+                            <li>Regular Updates</li>
+                            <li>Performance Optimization</li>
+                        </ul>
+                        <div class="service-price">Starting at $500/month</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="service-process">
+            <div class="container">
+                <h2>Our Service Process</h2>
+                <div class="process-steps">
+                    <div class="process-step" id="step1">
+                        <div class="step-number">1</div>
+                        <h3>Consultation</h3>
+                        <p>We start with a detailed consultation to understand your business needs and technical requirements.</p>
+                    </div>
+                    <div class="process-step" id="step2">
+                        <div class="step-number">2</div>
+                        <h3>Planning</h3>
+                        <p>Our team creates a comprehensive project plan with timelines, milestones, and deliverables.</p>
+                    </div>
+                    <div class="process-step" id="step3">
+                        <div class="step-number">3</div>
+                        <h3>Implementation</h3>
+                        <p>We execute the plan with regular updates and collaboration to ensure successful delivery.</p>
+                    </div>
+                    <div class="process-step" id="step4">
+                        <div class="step-number">4</div>
+                        <h3>Support</h3>
+                        <p>Ongoing support and maintenance to ensure optimal performance and continuous improvement.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="service-benefits">
+            <div class="container">
+                <h2>Why Choose Our Services?</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <h4>Expert Team</h4>
+                        <p>Certified professionals with years of industry experience</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>Quality Assurance</h4>
+                        <p>Rigorous testing and quality control processes</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>Timely Delivery</h4>
+                        <p>Projects completed on time and within budget</p>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>Ongoing Support</h4>
+                        <p>Continuous support and maintenance services</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Ready to Get Started?</h2>
+                    <p>Contact us today to discuss your project requirements and receive a customized quote.</p>
+                    <a href="request-demo.html" class="cta-button">Request Free Consultation</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TechConsult Pro</h3>
+                    <p>Your trusted partner for digital transformation and technology solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="solutions.html">Solutions</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p>Email: info@techconsultpro.com</p>
+                    <p>Phone: +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TechConsult Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(0,0,0,0.9)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe service cards
+        document.querySelectorAll('.service-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+
+        // Observe process steps
+        document.querySelectorAll('.process-step').forEach((step, index) => {
+            step.style.opacity = '0';
+            step.style.transform = 'translateY(30px)';
+            step.style.transition = `all 0.6s ease ${index * 0.15}s`;
+            observer.observe(step);
+        });
+
+        // Observe benefit items
+        document.querySelectorAll('.benefit-item').forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            item.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(item);
+        });
+
+        // Add hover effects for service cards
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const icon = card.querySelector('.service-icon');
+                icon.style.transform = 'scale(1.2) rotate(10deg)';
+                icon.style.transition = 'all 0.3s ease';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                const icon = card.querySelector('.service-icon');
+                icon.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Add parallax effect to page header
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const pageHeader = document.querySelector('.page-header');
+            const rate = scrolled * -0.5;
+            
+            if (pageHeader) {
+                pageHeader.style.transform = `translateY(${rate}px)`;
+            }
+        });
+
+        // Add typing effect to main heading
+        function typeWriter(element, text, delay = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, delay);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect when page loads
+        window.addEventListener('load', () => {
+            const mainHeading = document.querySelector('.page-header h1');
+            if (mainHeading) {
+                const originalText = mainHeading.textContent;
+                setTimeout(() => {
+                    typeWriter(mainHeading, originalText, 80);
+                }, 500);
+            }
+        });
+
+        // Add click animation to CTA button
+        document.querySelector('.cta-button').addEventListener('click', function(e) {
+            let ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            this.appendChild(ripple);
+            
+            let x = e.clientX - e.target.offsetLeft;
+            let y = e.clientY - e.target.offsetTop;
+            
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+
+        // Add floating animation to service icons
+        document.querySelectorAll('.service-icon').forEach((icon, index) => {
+            icon.style.animationDelay = `${index * 0.5}s`;
+        });
+
+        // Add staggered animation to process steps
+        const processSteps = document.querySelectorAll('.process-step');
+        processSteps.forEach((step, index) => {
+            step.style.animationDelay = `${index * 0.2}s`;
+        });
+    </script>
+
+    <style>
+        /* Additional CSS for ripple effect */
+        .cta-button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Enhanced mobile responsiveness */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: rgba(0,0,0,0.95);
+                backdrop-filter: blur(10px);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 30px 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                margin: 15px 0;
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .page-header {
+                padding: 60px 0;
+                margin: 10px;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .services-overview {
+                padding: 60px 0;
+            }
+
+            .services-intro h2 {
+                font-size: 2rem;
+            }
+
+            .service-process {
+                padding: 60px 0;
+                margin: 20px 10px;
+            }
+
+            .service-process h2 {
+                font-size: 2rem;
+            }
+
+            .service-benefits {
+                padding: 60px 0;
+            }
+
+            .service-benefits h2 {
+                font-size: 2rem;
+            }
+
+            .cta-section {
+                padding: 60px 0;
+            }
+
+            .cta-content {
+                padding: 40px 20px;
+                margin: 0 10px;
+            }
+
+            .cta-content h2 {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .service-card {
+                padding: 30px 20px;
+            }
+
+            .service-features {
+                font-size: 0.9rem;
+            }
+
+            .service-price {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+
+            .step-number {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .process-step h3 {
+                font-size: 1.3rem;
+            }
+
+            .benefit-item {
+                padding: 25px 20px;
+            }
+
+            .cta-button {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .service-card,
+            .process-step,
+            .benefit-item,
+            .cta-content {
+                border-color: rgba(255,255,255,0.3);
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .service-card,
+            .benefit-item,
+            .cta-content {
+                border: 2px solid white;
+            }
+
+            .service-features li::before {
+                color: #00ff00;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+
+            .cube {
+                animation: none;
+            }
+
+            .service-icon {
+                animation: none;
+            }
+
+            .step-number {
+                animation: none;
+            }
+        }
+    </style>
+</body>
+</html>
