@@ -1,0 +1,457 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">User Management</h1>
+        <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#addUserModal">
+            <i class="fas fa-user-plus fa-sm text-white-50 mr-1"></i> Add New User
+        </button>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">System Users</h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-filter fa-sm fa-fw text-gray-400"></i> Filter
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="filterDropdown">
+                            <div class="dropdown-header">Filter By Department:</div>
+                            <a class="dropdown-item filter-department active" data-department="all" href="#">All Departments</a>
+                            {% for department in departments %}
+                            <a class="dropdown-item filter-department" data-department="{{ department.name }}" href="#">{{ department.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Position</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- User data will be loaded here via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal-->
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="username">Username <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="full_name">Full Name</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="position">Position</label>
+                            <input type="text" class="form-control" id="position" name="position">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="department">Department</label>
+                            <select class="form-control" id="department" name="department">
+                                <option value="">Select Department</option>
+                                {% for department in departments %}
+                                <option value="{{ department.name }}">{{ department.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="custom-control custom-switch mt-4">
+                                <input type="checkbox" class="custom-control-input" id="is_admin" name="is_admin">
+                                <label class="custom-control-label" for="is_admin">Admin Privileges</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle mr-1"></i> A temporary password will be generated and sent to the user's email.
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="addUserBtn">Create User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="edit_user_id">
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="edit_username">Username <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit_username" name="edit_username" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_email">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="edit_email" name="edit_email" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="edit_full_name">Full Name</label>
+                            <input type="text" class="form-control" id="edit_full_name" name="edit_full_name">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_position">Position</label>
+                            <input type="text" class="form-control" id="edit_position" name="edit_position">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="edit_department">Department</label>
+                            <select class="form-control" id="edit_department" name="edit_department">
+                                <option value="">Select Department</option>
+                                {% for department in departments %}
+                                <option value="{{ department.name }}">{{ department.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_password">New Password (leave blank to keep unchanged)</label>
+                            <input type="password" class="form-control" id="edit_password" name="edit_password">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="custom-control custom-switch mt-2">
+                                <input type="checkbox" class="custom-control-input" id="edit_is_admin" name="edit_is_admin">
+                                <label class="custom-control-label" for="edit_is_admin">Admin Privileges</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="custom-control custom-switch mt-2">
+                                <input type="checkbox" class="custom-control-input" id="edit_is_active" name="edit_is_active">
+                                <label class="custom-control-label" for="edit_is_active">Active Account</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="updateUserBtn">Update User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete User Confirmation Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserModalLabel">Confirm Deletion</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the user <span id="deleteUserName" class="font-weight-bold"></span>?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> This action cannot be undone. All tasks assigned to this user will be unassigned.
+                </div>
+                <input type="hidden" id="delete_user_id">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteUserBtn">Delete User</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        let currentDepartmentFilter = 'all';
+        
+        // Load users on page load
+        loadUsers();
+        
+        // Handle department filter
+        $('.filter-department').on('click', function(e) {
+            e.preventDefault();
+            $('.filter-department').removeClass('active');
+            $(this).addClass('active');
+            
+            currentDepartmentFilter = $(this).data('department');
+            loadUsers();
+        });
+        
+        // Load users function
+        function loadUsers() {
+            $.ajax({
+                url: '/api/users',
+                type: 'GET',
+                data: {
+                    department: currentDepartmentFilter
+                },
+                success: function(data) {
+                    displayUsers(data);
+                },
+                error: function(xhr) {
+                    showToast('Error loading users', 'error');
+                }
+            });
+        }
+        
+        // Display users in table
+        function displayUsers(users) {
+            let tableBody = $('#usersTableBody');
+            tableBody.empty();
+            
+            if (users.length === 0) {
+                tableBody.append('<tr><td colspan="7" class="text-center">No users found</td></tr>');
+                return;
+            }
+            
+            users.forEach(function(user) {
+                let statusBadge = user.is_active ? 
+                    '<span class="badge badge-success">Active</span>' : 
+                    '<span class="badge badge-danger">Inactive</span>';
+                
+                let adminBadge = user.is_admin ? 
+                    '<span class="badge badge-info ml-1">Admin</span>' : '';
+                
+                let row = `
+                    <tr data-user-id="${user.id}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img class="img-profile rounded-circle mr-2" src="/static/img/profiles/${user.profile_image}" width="40">
+                                <div>
+                                    ${user.full_name || 'No Name'}
+                                    ${adminBadge}
+                                </div>
+                            </div>
+                        </td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.department || 'Not Assigned'}</td>
+                        <td>${user.position || 'Not Specified'}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-sm btn-circle btn-primary edit-user-btn" data-user-id="${user.id}" title="Edit User">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-circle btn-danger delete-user-btn" data-user-id="${user.id}" data-username="${user.username}" title="Delete User">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+            
+            // Initialize DataTable
+            if ($.fn.DataTable.isDataTable('#usersTable')) {
+                $('#usersTable').DataTable().destroy();
+            }
+            
+            $('#usersTable').DataTable({
+                "order": [[0, "asc"]],
+                "columnDefs": [
+                    { "orderable": false, "targets": 6 }
+                ]
+            });
+        }
+        
+        // Add User
+        $('#addUserBtn').on('click', function() {
+            let formData = {
+                username: $('#username').val(),
+                email: $('#email').val(),
+                full_name: $('#full_name').val(),
+                position: $('#position').val(),
+                department: $('#department').val(),
+                is_admin: $('#is_admin').is(':checked')
+            };
+            
+            $.ajax({
+                url: '/api/users',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    $('#addUserModal').modal('hide');
+                    showToast('User created successfully', 'success');
+                    $('#addUserForm')[0].reset();
+                    loadUsers();
+                },
+                error: function(xhr) {
+                    let errorMsg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Error creating user';
+                    showToast(errorMsg, 'error');
+                }
+            });
+        });
+        
+        // Edit User - Show Modal with Data
+        $(document).on('click', '.edit-user-btn', function() {
+            let userId = $(this).data('user-id');
+            
+            $.ajax({
+                url: `/api/users`,
+                type: 'GET',
+                success: function(users) {
+                    let user = users.find(u => u.id === userId);
+                    if (user) {
+                        $('#edit_user_id').val(user.id);
+                        $('#edit_username').val(user.username);
+                        $('#edit_email').val(user.email);
+                        $('#edit_full_name').val(user.full_name);
+                        $('#edit_position').val(user.position);
+                        $('#edit_department').val(user.department);
+                        $('#edit_is_admin').prop('checked', user.is_admin);
+                        $('#edit_is_active').prop('checked', user.is_active);
+                        $('#edit_password').val('');
+                        
+                        $('#editUserModal').modal('show');
+                    }
+                },
+                error: function(xhr) {
+                    showToast('Error loading user details', 'error');
+                }
+            });
+        });
+        
+        // Update User
+        $('#updateUserBtn').on('click', function() {
+            let userId = $('#edit_user_id').val();
+            let formData = {
+                username: $('#edit_username').val(),
+                email: $('#edit_email').val(),
+                full_name: $('#edit_full_name').val(),
+                position: $('#edit_position').val(),
+                department: $('#edit_department').val(),
+                is_admin: $('#edit_is_admin').is(':checked'),
+                is_active: $('#edit_is_active').is(':checked')
+            };
+            
+            // Only include password if it's not empty
+            if ($('#edit_password').val()) {
+                formData.password = $('#edit_password').val();
+            }
+            
+            $.ajax({
+                url: `/api/users/${userId}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    $('#editUserModal').modal('hide');
+                    showToast('User updated successfully', 'success');
+                    loadUsers();
+                },
+                error: function(xhr) {
+                    let errorMsg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Error updating user';
+                    showToast(errorMsg, 'error');
+                }
+            });
+        });
+        
+        // Delete User - Show Confirmation Modal
+        $(document).on('click', '.delete-user-btn', function() {
+            let userId = $(this).data('user-id');
+            let username = $(this).data('username');
+            
+            $('#delete_user_id').val(userId);
+            $('#deleteUserName').text(username);
+            $('#deleteUserModal').modal('show');
+        });
+        
+        // Confirm Delete User
+        $('#confirmDeleteUserBtn').on('click', function() {
+            let userId = $('#delete_user_id').val();
+            
+            $.ajax({
+                url: `/api/users/${userId}`,
+                type: 'DELETE',
+                success: function(response) {
+                    $('#deleteUserModal').modal('hide');
+                    showToast('User deleted successfully', 'success');
+                    loadUsers();
+                },
+                error: function(xhr) {
+                    let errorMsg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Error deleting user';
+                    showToast(errorMsg, 'error');
+                }
+            });
+        });
+        
+        // Toast notification function
+        function showToast(message, type) {
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                showMethod: 'slideDown',
+                timeOut: 4000
+            };
+            
+            switch(type) {
+                case 'success':
+                    toastr.success(message, 'Success');
+                    break;
+                case 'error':
+                    toastr.error(message, 'Error');
+                    break;
+                default:
+                    toastr.info(message);
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    
+    .login-container {
+        min-height: calc(100vh - 150px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .login-card {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 950px;
+        width: 100%;
+    }
+    
+    .login-branding {
+        background: linear-gradient(135deg, #4e54c8, #8f94fb);
+        color: white;
+        padding: 40px;
+    }
+    
+    .login-form {
+        padding: 40px;
+        background-color: white;
+    }
+    
+    .login-logo {
+        height: 60px;
+        margin-bottom: 20px;
+    }
+    
+    .form-control {
+        border-radius: 5px;
+        padding: 12px 15px;
+    }
+    
+    .btn-login {
+        background: linear-gradient(135deg, #4e54c8, #8f94fb);
+        border: none;
+        padding: 12px 15px;
+        border-radius: 5px;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="login-card">
+                    <div class="row g-0">
+                        <div class="col-lg-6 d-none d-lg-block">
+                            <div class="login-branding h-100 d-flex flex-column justify-content-between">
+                                <div>
+                                    <img src="{{ url_for('static', filename='img/logo-white.png') }}" alt="Merry's Timeline Logo" class="login-logo">
+                                    <h2 class="fw-bold mb-4">Welcome Back!</h2>
+                                    <p class="mb-4">Sign in to access your personalized dashboard and manage your tasks efficiently.</p>
+                                </div>
+                                <div>
+                                    <ul class="list-unstyled mb-5">
+                                        <li class="mb-3"><i class="fas fa-check-circle me-2"></i> Task management made simple</li>
+                                        <li class="mb-3"><i class="fas fa-check-circle me-2"></i> Track progress and deadlines</li>
+                                        <li class="mb-3"><i class="fas fa-check-circle me-2"></i> Collaborate with your team</li>
+                                    </ul>
+                                    <p class="small mb-0">Don't have an account? Contact your administrator.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="login-form">
+                                <div class="text-center mb-4 d-block d-lg-none">
+                                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Merry's Timeline Logo" class="login-logo">
+                                </div>
+                                <h3 class="fw-bold mb-4">Sign In</h3>
+                                <form method="POST" action="{{ url_for('login') }}">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="password" class="form-label">Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                                        </div>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-login py-3">Sign In</button>
+                                    </div>
+                                </form>
+                                <div class="text-center mt-4">
+                                    <p class="mb-0 text-muted">Forgot your password? Contact your administrator.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

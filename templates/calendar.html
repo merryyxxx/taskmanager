@@ -1,0 +1,594 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    .calendar-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    .calendar-nav {
+        display: flex;
+        align-items: center;
+    }
+    .calendar-nav button {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        color: #3498db;
+        cursor: pointer;
+        padding: 5px 10px;
+    }
+    .calendar-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0 15px;
+    }
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        padding: 15px;
+    }
+    .calendar-day-header {
+        text-align: center;
+        font-weight: 600;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    .calendar-day {
+        min-height: 120px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 5px;
+        position: relative;
+    }
+    .calendar-day:hover {
+        background-color: #f9f9f9;
+    }
+    .calendar-day-number {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-weight: 600;
+        color: #7f8c8d;
+    }
+    .current-day .calendar-day-number {
+        color: #fff;
+        background-color: #3498db;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .calendar-day-content {
+        margin-top: 30px;
+    }
+    .task-item, .event-item {
+        margin-bottom: 5px;
+        padding: 5px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+    }
+    .task-item {
+        border-left: 3px solid;
+    }
+    .task-item.high {
+        border-left-color: #e74c3c;
+        background-color: rgba(231, 76, 60, 0.1);
+    }
+    .task-item.medium {
+        border-left-color: #f39c12;
+        background-color: rgba(243, 156, 18, 0.1);
+    }
+    .task-item.low {
+        border-left-color: #2ecc71;
+        background-color: rgba(46, 204, 113, 0.1);
+    }
+    .event-item {
+        border-left: 3px solid #9b59b6;
+        background-color: rgba(155, 89, 182, 0.1);
+    }
+    .event-item.meeting {
+        border-left-color: #3498db;
+        background-color: rgba(52, 152, 219, 0.1);
+    }
+    .event-item.holiday {
+        border-left-color: #e74c3c;
+        background-color: rgba(231, 76, 60, 0.1);
+    }
+    .event-item.deadline {
+        border-left-color: #f39c12;
+        background-color: rgba(243, 156, 18, 0.1);
+    }
+    .calendar-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+    .legend-color {
+        width: 15px;
+        height: 15px;
+        margin-right: 5px;
+        border-radius: 3px;
+    }
+    
+    /* Task details modal */
+    .modal-task-detail .modal-header {
+        border-bottom: 3px solid;
+    }
+    .modal-task-detail.high .modal-header {
+        border-bottom-color: #e74c3c;
+    }
+    .modal-task-detail.medium .modal-header {
+        border-bottom-color: #f39c12;
+    }
+    .modal-task-detail.low .modal-header {
+        border-bottom-color: #2ecc71;
+    }
+    .task-status {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        border-radius: 12px;
+        background-color: #f8f9fa;
+    }
+    .task-status.pending {
+        background-color: #f8f9fa;
+    }
+    .task-status.completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .task-status.overdue {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .calendar-day.disabled {
+        background-color: #f9f9f9;
+        color: #ccc;
+    }
+    .outside-month {
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h3 mb-0">Calendar</h1>
+            <p class="text-muted">View and manage your schedule</p>
+        </div>
+    </div>
+
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="calendar-nav">
+                <button id="prevMonth" title="Previous Month"><i class="fas fa-chevron-left"></i></button>
+                <h2 class="calendar-title" id="monthYearLabel">Month Year</h2>
+                <button id="nextMonth" title="Next Month"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="d-flex">
+                <button class="btn btn-sm btn-outline-secondary me-2" id="todayBtn">Today</button>
+                {% if current_user.is_admin %}
+                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
+                    <i class="fas fa-plus me-1"></i> Add Event
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- Calendar days will be generated here -->
+        </div>
+    </div>
+    
+    <div class="calendar-legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: rgba(231, 76, 60, 0.1); border-left: 3px solid #e74c3c;"></div>
+            <span>High Priority Task</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: rgba(243, 156, 18, 0.1); border-left: 3px solid #f39c12;"></div>
+            <span>Medium Priority Task</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: rgba(46, 204, 113, 0.1); border-left: 3px solid #2ecc71;"></div>
+            <span>Low Priority Task</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: rgba(155, 89, 182, 0.1); border-left: 3px solid #9b59b6;"></div>
+            <span>General Event</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: rgba(52, 152, 219, 0.1); border-left: 3px solid #3498db;"></div>
+            <span>Meeting</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: rgba(231, 76, 60, 0.1); border-left: 3px solid #e74c3c;"></div>
+            <span>Holiday</span>
+        </div>
+    </div>
+</div>
+
+<!-- Task Details Modal -->
+<div class="modal fade" id="taskDetailModal" tabindex="-1" aria-labelledby="taskDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-task-detail">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskDetailModalLabel">Task Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 d-flex justify-content-between align-items-center">
+                    <span class="task-status pending" id="taskStatus">Status</span>
+                    <span class="text-muted" id="taskPriority">Priority</span>
+                </div>
+                <div class="mb-3">
+                    <h6>Description</h6>
+                    <p id="taskDescription">Task description here...</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6>Due Date</h6>
+                        <p id="taskDueDate" class="mb-0">YYYY-MM-DD</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6>Assigned To</h6>
+                        <p id="taskAssignee" class="mb-0">Username</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="/tasks" class="btn btn-primary">Go to Tasks</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Details Modal -->
+<div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventDetailModalLabel">Event Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h6>Description</h6>
+                    <p id="eventDescription">Event description here...</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6>Date</h6>
+                        <p id="eventDate" class="mb-0">YYYY-MM-DD</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6>Category</h6>
+                        <p id="eventCategory" class="mb-0">Category</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                {% if current_user.is_admin %}
+                <a href="/events" class="btn btn-primary">Manage Events</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Event Modal (Admin only) -->
+{% if current_user.is_admin %}
+<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEventModalLabel">Add New Event</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addEventForm">
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Event Title</label>
+                        <input type="text" class="form-control" id="eventTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="eventDescription" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDate" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="eventDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventCategory" class="form-label">Category</label>
+                        <select class="form-select" id="eventCategory">
+                            <option value="general">General</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="holiday">Holiday</option>
+                            <option value="deadline">Deadline</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveEventBtn">Save Event</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        let currentYear = {{ year }};
+        let currentMonth = {{ month }};
+        
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June", 
+            "July", "August", "September", "October", "November", "December"
+        ];
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        
+        // Initialize calendar
+        renderCalendar(currentYear, currentMonth);
+        
+        // Event listeners for navigation
+        $("#prevMonth").on("click", function() {
+            if (currentMonth === 1) {
+                currentMonth = 12;
+                currentYear--;
+            } else {
+                currentMonth--;
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+        
+        $("#nextMonth").on("click", function() {
+            if (currentMonth === 12) {
+                currentMonth = 1;
+                currentYear++;
+            } else {
+                currentMonth++;
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+        
+        $("#todayBtn").on("click", function() {
+            const today = new Date();
+            currentYear = today.getFullYear();
+            currentMonth = today.getMonth() + 1;
+            renderCalendar(currentYear, currentMonth);
+        });
+        
+        // Save event (Admin only)
+        {% if current_user.is_admin %}
+        $("#saveEventBtn").on("click", function() {
+            const title = $("#eventTitle").val().trim();
+            const description = $("#eventDescription").val().trim();
+            const date = $("#eventDate").val();
+            const category = $("#eventCategory").val();
+            
+            if (!title || !date) {
+                alert("Please enter a title and date for the event.");
+                return;
+            }
+            
+            $.ajax({
+                url: "/api/events",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    title: title,
+                    description: description,
+                    date: date,
+                    category: category
+                }),
+                success: function(response) {
+                    $("#addEventModal").modal("hide");
+                    renderCalendar(currentYear, currentMonth);
+                    
+                    // Reset form
+                    $("#addEventForm")[0].reset();
+                    
+                    // Show success message
+                    alert("Event created successfully!");
+                },
+                error: function(xhr) {
+                    alert("Error creating event: " + xhr.responseJSON.error);
+                }
+            });
+        });
+        {% endif %}
+        
+        function renderCalendar(year, month) {
+            // Update month/year label
+            $("#monthYearLabel").text(monthNames[month - 1] + " " + year);
+            
+            // Clear calendar grid
+            const calendarGrid = $("#calendarGrid");
+            calendarGrid.empty();
+            
+            // Add day headers
+            dayNames.forEach(day => {
+                calendarGrid.append(`<div class="calendar-day-header">${day}</div>`);
+            });
+            
+            // Get first day of month and total days
+            const firstDay = new Date(year, month - 1, 1);
+            const lastDay = new Date(year, month, 0);
+            const totalDays = lastDay.getDate();
+            const startDayIndex = firstDay.getDay(); // 0-6 (Sunday-Saturday)
+            
+            // Get current date for highlighting
+            const today = new Date();
+            const currentDay = today.getDate();
+            const currentMonthReal = today.getMonth() + 1;
+            const currentYearReal = today.getFullYear();
+            
+            // Get days from previous month to fill first row
+            const prevMonthLastDay = new Date(year, month - 1, 0).getDate();
+            for (let i = 0; i < startDayIndex; i++) {
+                const prevDay = prevMonthLastDay - startDayIndex + i + 1;
+                calendarGrid.append(`
+                    <div class="calendar-day disabled outside-month">
+                        <div class="calendar-day-number">${prevDay}</div>
+                        <div class="calendar-day-content"></div>
+                    </div>
+                `);
+            }
+            
+            // Add current month days
+            for (let day = 1; day <= totalDays; day++) {
+                const isToday = day === currentDay && month === currentMonthReal && year === currentYearReal;
+                const dayClass = isToday ? "calendar-day current-day" : "calendar-day";
+                
+                calendarGrid.append(`
+                    <div class="${dayClass}" data-date="${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}">
+                        <div class="calendar-day-number">${day}</div>
+                        <div class="calendar-day-content" id="day-${day}"></div>
+                    </div>
+                `);
+            }
+            
+            // Fill remaining cells with next month days
+            const totalCells = 42; // 6 rows x 7 days
+            const remainingCells = totalCells - (startDayIndex + totalDays);
+            for (let i = 1; i <= remainingCells; i++) {
+                calendarGrid.append(`
+                    <div class="calendar-day disabled outside-month">
+                        <div class="calendar-day-number">${i}</div>
+                        <div class="calendar-day-content"></div>
+                    </div>
+                `);
+            }
+            
+            // Load calendar data
+            loadCalendarData(year, month);
+        }
+        
+        function loadCalendarData(year, month) {
+            $.ajax({
+                url: `/api/calendar_data?year=${year}&month=${month}`,
+                type: "GET",
+                success: function(data) {
+                    // Clear existing items first
+                    $(".calendar-day-content").empty();
+                    
+                    // Populate calendar with data
+                    for (const day in data) {
+                        const dayContent = $(`#day-${day}`);
+                        
+                        // Add tasks
+                        data[day].tasks.forEach(task => {
+                            const taskElement = $(`<div class="task-item ${task.priority}">${task.title}</div>`)
+                                .data("task", task);
+                                
+                            taskElement.on("click", function() {
+                                showTaskDetails($(this).data("task"));
+                            });
+                            
+                            dayContent.append(taskElement);
+                        });
+                        
+                        // Add events
+                        data[day].events.forEach(event => {
+                            const eventElement = $(`<div class="event-item ${event.category}">${event.title}</div>`)
+                                .data("event", event);
+                                
+                            eventElement.on("click", function() {
+                                showEventDetails($(this).data("event"));
+                            });
+                            
+                            dayContent.append(eventElement);
+                        });
+                    }
+                }
+            });
+        }
+        
+        function showTaskDetails(task) {
+            // Set task details in modal
+            $("#taskDetailModalLabel").text(task.title);
+            $("#taskStatus").text(task.status.charAt(0).toUpperCase() + task.status.slice(1));
+            $("#taskStatus").attr("class", "task-status " + task.status);
+            $("#taskPriority").text(task.priority.charAt(0).toUpperCase() + task.priority.slice(1) + " Priority");
+            
+            // Get full task details from API
+            $.ajax({
+                url: `/api/tasks?id=${task.id}`,
+                type: "GET",
+                success: function(tasks) {
+                    if (tasks.length > 0) {
+                        const fullTask = tasks[0];
+                        
+                        $("#taskDescription").text(fullTask.description || "No description provided");
+                        $("#taskDueDate").text(fullTask.due_date);
+                        $("#taskAssignee").text(fullTask.assignee_name);
+                        
+                        // Set modal priority class
+                        $(".modal-task-detail").attr("class", "modal-dialog modal-task-detail " + fullTask.priority);
+                        
+                        // Show modal
+                        $("#taskDetailModal").modal("show");
+                    }
+                }
+            });
+        }
+        
+        function showEventDetails(event) {
+            // Get full event details from API
+            $.ajax({
+                url: `/api/events?id=${event.id}`,
+                type: "GET",
+                success: function(events) {
+                    if (events.length > 0) {
+                        const fullEvent = events[0];
+                        
+                        // Set event details in modal
+                        $("#eventDetailModalLabel").text(fullEvent.title);
+                        $("#eventDescription").text(fullEvent.description || "No description provided");
+                        $("#eventDate").text(fullEvent.date);
+                        $("#eventCategory").text(fullEvent.category.charAt(0).toUpperCase() + fullEvent.category.slice(1));
+                        
+                        // Show modal
+                        $("#eventDetailModal").modal("show");
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

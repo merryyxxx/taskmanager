@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+    .report-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    
+    .report-header {
+        margin-bottom: 25px;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 15px;
+    }
+    
+    .stats-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .stat-card {
+        flex: 1;
+        min-width: 200px;
+        background-color: #f8f9fa;
+        border-left: 4px solid #3498db;
+        border-radius: 5px;
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .stat-card.completed {
+        border-left-color: #2ecc71;
+    }
+    
+    .stat-card.pending {
+        border-left-color: #f39c12;
+    }
+    
+    .stat-card.overdue {
+        border-left-color: #e74c3c;
+    }
+    
+    .stat-number {
+        font-size: 28px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 14px;
+    }
+    
+    .form-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .form-section h3 {
+        margin-bottom: 20px;
+        color: #2c3e50;
+    }
+    
+    .task-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .task-item {
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        background-color: #fff;
+        border-left: 4px solid #3498db;
+    }
+    
+    .task-item.high {
+        border-left-color: #e74c3c;
+    }
+    
+    .task-item.medium {
+        border-left-color: #f39c12;
+    }
+    
+    .task-item.low {
+        border-left-color: #2ecc71;
+    }
+    
+    .task-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .task-details {
+        font-size: 14px;
+        color: #7f8c8d;
+    }
+    
+    .task-status {
+        font-size: 12px;
+        padding: 3px 8px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-left: 5px;
+    }
+    
+    .status-pending {
+        background-color: #f39c12;
+        color: white;
+    }
+    
+    .status-completed {
+        background-color: #2ecc71;
+        color: white;
+    }
+    
+    .status-overdue {
+        background-color: #e74c3c;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-chart-bar me-2"></i> Reports</h1>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="report-container">
+                <div class="report-header">
+                    <h2>Task Progress Report</h2>
+                    <p class="text-muted">Generate and send detailed reports of your task progress</p>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card completed">
+                        <div class="stat-number completed-count">0</div>
+                        <div class="stat-label">Completed Tasks</div>
+                    </div>
+                    <div class="stat-card pending">
+                        <div class="stat-number pending-count">0</div>
+                        <div class="stat-label">Pending Tasks</div>
+                    </div>
+                    <div class="stat-card overdue">
+                        <div class="stat-number overdue-count">0</div>
+                        <div class="stat-label">Overdue Tasks</div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Generate Report</h3>
+                    <form id="reportForm">
+                        <div class="mb-3">
+                            <label for="reportPeriod" class="form-label">Time Period</label>
+                            <select class="form-select" id="reportPeriod" name="period">
+                                <option value="weekly">Weekly (Last 7 days)</option>
+                                <option value="monthly">Monthly (Current Month)</option>
+                                <option value="all">All Time</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="reportComments" class="form-label">Additional Comments</label>
+                            <textarea class="form-control" id="reportComments" name="comments" rows="4" placeholder="Add any additional information or comments for the report..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" id="sendReportBtn">
+                                <i class="fas fa-paper-plane me-2"></i> Send Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="report-container">
+                <h3>Report Preview</h3>
+                <p class="text-muted mb-4">Task summary for the selected period</p>
+                
+                <div class="task-preview">
+                    <h4>Completed Tasks <span class="completed-count badge bg-success">0</span></h4>
+                    <div class="task-list completed-tasks">
+                        <div class="text-center py-3 no-completed-tasks">
+                            <i class="fas fa-clipboard-check text-muted mb-2" style="font-size: 24px;"></i>
+                            <p class="mb-0">No completed tasks for this period</p>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mt-4">Pending Tasks <span class="pending-count badge bg-warning">0</span></h4>
+                    <div class="task-list pending-tasks">
+                        <div class="text-center py-3 no-pending-tasks">
+                            <i class="fas fa-clipboard-list text-muted mb-2" style="font-size: 24px;"></i>
+                            <p class="mb-0">No pending tasks for this period</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Sent Modal -->
+<div class="modal fade" id="reportSentModal" tabindex="-1" aria-labelledby="reportSentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportSentModalLabel">Report Sent</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fas fa-check-circle text-success mb-3" style="font-size: 48px;"></i>
+                    <h4>Success!</h4>
+                    <p>Your report has been sent successfully to the administrator.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Load initial tasks for weekly report (default)
+        loadTasksPreview('weekly');
+        
+        // Handle period change
+        $('#reportPeriod').on('change', function() {
+            const period = $(this).val();
+            loadTasksPreview(period);
+        });
+        
+        // Handle form submission
+        $('#reportForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = $('#sendReportBtn');
+            submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Sending...');
+            
+            const formData = {
+                period: $('#reportPeriod').val(),
+                comments: $('#reportComments').val(),
+                type: 'summary'
+            };
+            
+            $.ajax({
+                url: '/send_report',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    // Show success modal
+                    $('#reportSentModal').modal('show');
+                    
+                    // Reset form and button
+                    $('#reportComments').val('');
+                    submitBtn.prop('disabled', false).html('<i class="fas fa-paper-plane me-2"></i> Send Report');
+                },
+                error: function(xhr) {
+                    // Handle error
+                    let errorMessage = 'Failed to send report. Please try again.';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+                    
+                    alert(errorMessage);
+                    submitBtn.prop('disabled', false).html('<i class="fas fa-paper-plane me-2"></i> Send Report');
+                }
+            });
+        });
+        
+        function loadTasksPreview(period) {
+            // Calculate date range based on period
+            const today = new Date();
+            let startDate = new Date();
+            
+            if (period === 'weekly') {
+                // Last 7 days
+                startDate.setDate(today.getDate() - 7);
+            } else if (period === 'monthly') {
+                // Current month
+                startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            } else if (period === 'all') {
+                // All time (use old date)
+                startDate = new Date(2000, 0, 1);
+            }
+            
+            // Format dates for API
+            const formatDate = (date) => {
+                return date.getFullYear() + '-' + 
+                       String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(date.getDate()).padStart(2, '0');
+            };
+            
+            // Get tasks for preview
+            $.ajax({
+                url: '/api/tasks',
+                type: 'GET',
+                data: {
+                    status: 'all'
+                },
+                success: function(tasks) {
+                    // Filter tasks based on period
+                    const startTime = startDate.getTime();
+                    const endTime = today.getTime();
+                    
+                    // Parse tasks into completed and pending
+                    const completedTasks = tasks.filter(task => 
+                        task.status === 'completed' && 
+                        new Date(task.created_at).getTime() >= startTime
+                    );
+                    
+                    const pendingTasks = tasks.filter(task => 
+                        task.status === 'pending'
+                    );
+                    
+                    const overdueTasks = pendingTasks.filter(task => 
+                        task.is_overdue
+                    );
+                    
+                    // Update counts
+                    $('.completed-count').text(completedTasks.length);
+                    $('.pending-count').text(pendingTasks.length);
+                    $('.overdue-count').text(overdueTasks.length);
+                    
+                    // Clear task lists
+                    $('.completed-tasks').empty();
+                    $('.pending-tasks').empty();
+                    
+                    // Show no tasks message if needed
+                    if (completedTasks.length === 0) {
+                        $('.completed-tasks').html(`
+                            <div class="text-center py-3 no-completed-tasks">
+                                <i class="fas fa-clipboard-check text-muted mb-2" style="font-size: 24px;"></i>
+                                <p class="mb-0">No completed tasks for this period</p>
+                            </div>
+                        `);
+                    } else {
+                        // Add completed tasks to preview
+                        completedTasks.slice(0, 5).forEach(task => {
+                            $('.completed-tasks').append(`
+                                <div class="task-item ${task.priority}">
+                                    <div class="task-title">${task.title}</div>
+                                    <div class="task-details">
+                                        Due: ${task.due_date}
+                                        <span class="task-status status-completed">Completed</span>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                        
+                        // Add "more" message if needed
+                        if (completedTasks.length > 5) {
+                            $('.completed-tasks').append(`
+                                <div class="text-center mt-2">
+                                    <small class="text-muted">+ ${completedTasks.length - 5} more completed tasks</small>
+                                </div>
+                            `);
+                        }
+                    }
+                    
+                    if (pendingTasks.length === 0) {
+                        $('.pending-tasks').html(`
+                            <div class="text-center py-3 no-pending-tasks">
+                                <i class="fas fa-clipboard-list text-muted mb-2" style="font-size: 24px;"></i>
+                                <p class="mb-0">No pending tasks for this period</p>
+                            </div>
+                        `);
+                    } else {
+                        // Add pending tasks to preview
+                        pendingTasks.slice(0, 5).forEach(task => {
+                            $('.pending-tasks').append(`
+                                <div class="task-item ${task.priority}">
+                                    <div class="task-title">${task.title}</div>
+                                    <div class="task-details">
+                                        Due: ${task.due_date}
+                                        <span class="task-status ${task.is_overdue ? 'status-overdue' : 'status-pending'}">
+                                            ${task.is_overdue ? 'Overdue' : 'Pending'}
+                                        </span>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                        
+                        // Add "more" message if needed
+                        if (pendingTasks.length > 5) {
+                            $('.pending-tasks').append(`
+                                <div class="text-center mt-2">
+                                    <small class="text-muted">+ ${pendingTasks.length - 5} more pending tasks</small>
+                                </div>
+                            `);
+                        }
+                    }
+                },
+                error: function() {
+                    // Handle error
+                    $('.completed-tasks, .pending-tasks').html(`
+                        <div class="text-center py-3">
+                            <i class="fas fa-exclamation-triangle text-warning mb-2" style="font-size: 24px;"></i>
+                            <p class="mb-0">Unable to load tasks</p>
+                        </div>
+                    `);
+                    
+                    $('.completed-count, .pending-count, .overdue-count').text('--');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
