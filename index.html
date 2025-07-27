@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechConsult Pro - Digital Solutions & Services</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header>
@@ -22,14 +23,50 @@
                 </div>
                 <h1>TechConsult Pro</h1>
             </div>
-            <nav>
+            <nav class="main-nav">
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="pages/solutions.html">Solutions</a></li>
-                    <li><a href="pages/services.html">Services</a></li>
-                    <li><a href="pages/request-demo.html">Request Demo</a></li>
-                    <li><a href="pages/about.html">About Us</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link active">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-cogs"></i> Solutions
+                            <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./pages/solutions.html">Web Development</a></li>
+                            <li><a href="./pages/solutions.html">Cloud Solutions</a></li>
+                            <li><a href="./pages/solutions.html">Mobile Apps</a></li>
+                            <li><a href="./pages/solutions.html">E-commerce</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-briefcase"></i> Services
+                            <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="./pages/services.html">Consulting</a></li>
+                            <li><a href="./pages/services.html">Support</a></li>
+                            <li><a href="./pages/services.html">Training</a></li>
+                            <li><a href="./pages/services.html">Maintenance</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="./pages/request-demo.html" class="nav-link">
+                            <i class="fas fa-play-circle"></i> Request Demo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="./pages/about.html" class="nav-link">
+                            <i class="fas fa-info-circle"></i> About Us
+                        </a>
+                    </li>
                 </ul>
+                
+                <!-- Mobile Menu Toggle -->
                 <div class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
@@ -39,111 +76,284 @@
         </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-text">
-                        <h2>Transform Your Business with Digital Excellence</h2>
-                        <p>We provide cutting-edge technology solutions and expert consulting services to help your business thrive in the digital age. From web development to cloud solutions, we've got you covered.</p>
+    <!-- Main Content Layout with Sidebar -->
+    <div class="page-layout">
+        <main class="main-content">
+            <!-- Hero Section with Image Slider -->
+            <section class="hero">
+                <div class="hero-slider">
+                    <div class="slide active" style="background: linear-gradient(rgba(102,126,234,0.8), rgba(118,75,162,0.8)), url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22><rect fill=%22%23667eea%22 width=%221200%22 height=%22600%22/><circle fill=%22%23764ba2%22 cx=%22300%22 cy=%22150%22 r=%2280%22 opacity=%220.3%22/><circle fill=%22%23ff6b6b%22 cx=%22900%22 cy=%22450%22 r=%22120%22 opacity=%220.2%22/><polygon fill=%22%23ffffff%22 points=%22600,100 650,200 550,200%22 opacity=%220.1%22/></svg>');">
+                        <div class="container">
+                            <div class="hero-content">
+                                <div class="hero-text">
+                                    <h2>Transform Your Business with Digital Excellence</h2>
+                                    <p>We provide cutting-edge technology solutions and expert consulting services to help your business thrive in the digital age.</p>
+                                    <div class="cta-buttons">
+                                        <a href="#" class="cta-primary">Get Free Demo</a>
+                                        <a href="#" class="cta-secondary">View Solutions</a>
+                                    </div>
+                                </div>
+                                <div class="hero-visual">
+                                    <div class="floating-elements">
+                                        <div class="floating-card" id="card1">
+                                            <i class="fas fa-laptop-code"></i>
+                                            <h4>Web Development</h4>
+                                            <p>Modern & Responsive</p>
+                                        </div>
+                                        <div class="floating-card" id="card2">
+                                            <i class="fas fa-cloud"></i>
+                                            <h4>Cloud Solutions</h4>
+                                            <p>Scalable & Secure</p>
+                                        </div>
+                                        <div class="floating-card" id="card3">
+                                            <i class="fas fa-chart-line"></i>
+                                            <h4>Digital Strategy</h4>
+                                            <p>Data-Driven Results</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slide" style="background: linear-gradient(rgba(255,107,107,0.8), rgba(255,82,82,0.8)), url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22><rect fill=%22%23ff6b6b%22 width=%221200%22 height=%22600%22/><circle fill=%22%23667eea%22 cx=%22800%22 cy=%22200%22 r=%22100%22 opacity=%220.3%22/><circle fill=%22%23764ba2%22 cx=%22400%22 cy=%22400%22 r=%2290%22 opacity=%220.2%22/></svg>');">
+                        <div class="container">
+                            <div class="hero-content">
+                                <div class="hero-text">
+                                    <h2>Innovation Meets Excellence</h2>
+                                    <p>Discover how our innovative solutions can revolutionize your business operations and drive unprecedented growth.</p>
+                                    <div class="cta-buttons">
+                                        <a href="#" class="cta-primary">Learn More</a>
+                                        <a href="#" class="cta-secondary">Contact Us</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slide" style="background: linear-gradient(rgba(118,75,162,0.8), rgba(102,126,234,0.8)), url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 600%22><rect fill=%22%23764ba2%22 width=%221200%22 height=%22600%22/><rect fill=%22%23667eea%22 x=%22200%22 y=%22100%22 width=%22100%22 height=%22100%22 opacity=%220.3%22/><rect fill=%22%23ff6b6b%22 x=%22900%22 y=%22300%22 width=%22150%22 height=%22150%22 opacity=%220.2%22/></svg>');">
+                        <div class="container">
+                            <div class="hero-content">
+                                <div class="hero-text">
+                                    <h2>Your Success, Our Mission</h2>
+                                    <p>Partner with us for comprehensive digital transformation that delivers measurable results and sustainable growth.</p>
+                                    <div class="cta-buttons">
+                                        <a href="#" class="cta-primary">Get Started</a>
+                                        <a href="#" class="cta-secondary">View Portfolio</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slider Controls -->
+                <div class="slider-controls">
+                    <button class="slider-btn prev" id="prevSlide">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="slider-dots">
+                        <span class="dot active" data-slide="0"></span>
+                        <span class="dot" data-slide="1"></span>
+                        <span class="dot" data-slide="2"></span>
+                    </div>
+                    <button class="slider-btn next" id="nextSlide">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Information Boxes Section -->
+            <section class="info-boxes">
+                <div class="container">
+                    <div class="info-boxes-grid">
+                        <div class="info-box primary">
+                            <div class="info-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Quick Launch</h3>
+                                <p>Get your project up and running in record time with our streamlined development process and proven methodologies.</p>
+                                <a href="./pages/request-demo.html" class="info-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
                         
-                        <!-- Call to Action Buttons -->
-                        <div class="cta-buttons">
-                            <a href="pages/request-demo.html" class="cta-primary" id="ctaPrimary">Get Free Demo</a>
-                            <a href="pages/solutions.html" class="cta-secondary" id="ctaSecondary">View Solutions</a>
-                        </div>
-                    </div>
-                    <div class="hero-visual">
-                        <div class="floating-elements">
-                            <div class="floating-card" id="card1">
-                                <h4>Web Development</h4>
-                                <p>Modern & Responsive</p>
+                        <div class="info-box secondary">
+                            <div class="info-icon">
+                                <i class="fas fa-shield-alt"></i>
                             </div>
-                            <div class="floating-card" id="card2">
-                                <h4>Cloud Solutions</h4>
-                                <p>Scalable & Secure</p>
-                            </div>
-                            <div class="floating-card" id="card3">
-                                <h4>Digital Strategy</h4>
-                                <p>Data-Driven Results</p>
+                            <div class="info-content">
+                                <h3>Secure & Reliable</h3>
+                                <p>Enterprise-grade security measures and 99.9% uptime guarantee ensure your business operations never skip a beat.</p>
+                                <a href="#" class="info-link">View Security <i class="fas fa-arrow-right"></i></a>
                             </div>
                         </div>
+                        
+                        <div class="info-box accent">
+                            <div class="info-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Expert Team</h3>
+                                <p>Our certified professionals bring years of experience and cutting-edge expertise to every project we undertake.</p>
+                                <a href="#" class="info-link">Meet Team <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="features">
-            <div class="container">
-                <h2>Why Choose TechConsult Pro?</h2>
-                <div class="features-grid">
-                    <div class="feature-card" id="feature1">
-                        <div class="feature-icon">🚀</div>
-                        <h3>Fast Implementation</h3>
-                        <p>Quick turnaround times without compromising quality. Get your solutions deployed faster.</p>
+            <!-- Features Section -->
+            <section class="features">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Why Choose TechConsult Pro?</h2>
+                        <p>Discover the advantages that set us apart in the digital solutions landscape</p>
                     </div>
-                    <div class="feature-card" id="feature2">
-                        <div class="feature-icon">🛡️</div>
-                        <h3>Secure Solutions</h3>
-                        <p>Enterprise-grade security measures to protect your data and ensure compliance.</p>
-                    </div>
-                    <div class="feature-card" id="feature3">
-                        <div class="feature-icon">📈</div>
-                        <h3>Scalable Growth</h3>
-                        <p>Solutions that grow with your business, adapting to your changing needs.</p>
-                    </div>
-                    <div class="feature-card" id="feature4">
-                        <div class="feature-icon">🎯</div>
-                        <h3>Expert Support</h3>
-                        <p>24/7 professional support from our team of certified technology experts.</p>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🚀</div>
+                            <h3>Fast Implementation</h3>
+                            <p>Quick turnaround times without compromising quality. Get your solutions deployed faster than ever before.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🛡️</div>
+                            <h3>Secure Solutions</h3>
+                            <p>Enterprise-grade security measures to protect your data and ensure compliance with industry standards.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📈</div>
+                            <h3>Scalable Growth</h3>
+                            <p>Solutions that grow with your business, adapting seamlessly to your changing needs and requirements.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎯</div>
+                            <h3>Expert Support</h3>
+                            <p>24/7 professional support from our team of certified technology experts and consultants.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="stats">
-            <div class="container">
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-number" id="stat1">500+</div>
-                        <div class="stat-label">Projects Completed</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="stat2">100+</div>
-                        <div class="stat-label">Happy Clients</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="stat3">5+</div>
-                        <div class="stat-label">Years Experience</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="stat4">24/7</div>
-                        <div class="stat-label">Support Available</div>
+            <!-- Stats Section -->
+            <section class="stats">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="stat1">500+</div>
+                            <div class="stat-label">Projects Completed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="stat2">100+</div>
+                            <div class="stat-label">Happy Clients</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="stat3">5+</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="stat4">24/7</div>
+                            <div class="stat-label">Support Available</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
+        </main>
 
+        <!-- Sidebar with Additional Links and Widgets -->
+        <aside class="sidebar">
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-newspaper"></i> Latest News</h3>
+                <div class="news-item">
+                    <div class="news-date">Dec 15, 2024</div>
+                    <h4>New Cloud Infrastructure Launch</h4>
+                    <p>We've expanded our cloud services with enhanced performance and security features.</p>
+                </div>
+                <div class="news-item">
+                    <div class="news-date">Dec 10, 2024</div>
+                    <h4>Partnership Announcement</h4>
+                    <p>Strategic partnership with leading tech companies to deliver better solutions.</p>
+                </div>
+                <div class="news-item">
+                    <div class="news-date">Dec 5, 2024</div>
+                    <h4>Award Recognition</h4>
+                    <p>TechConsult Pro recognized as "Best Digital Solutions Provider 2024".</p>
+                </div>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-link"></i> Quick Links</h3>
+                <ul class="quick-links">
+                    <li><a href="#"><i class="fas fa-file-alt"></i> Documentation</a></li>
+                    <li><a href="#"><i class="fas fa-download"></i> Downloads</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                    <li><a href="#"><i class="fas fa-headset"></i> Support Center</a></li>
+                    <li><a href="#"><i class="fas fa-blog"></i> Tech Blog</a></li>
+                    <li><a href="#"><i class="fas fa-calendar"></i> Events</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-envelope"></i> Newsletter</h3>
+                <p>Stay updated with our latest news and offers.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+            
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-share-alt"></i> Follow Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-link instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link youtube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>TechConsult Pro</h3>
-                    <p>Your trusted partner for digital transformation and technology solutions.</p>
+                    <p>Your trusted partner for digital transformation and technology solutions that drive business success.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
                 <div class="footer-section">
-                    <h4>Quick Links</h4>
+                    <h4>Solutions</h4>
                     <ul>
-                        <li><a href="pages/solutions.html">Solutions</a></li>
-                        <li><a href="pages/services.html">Services</a></li>
-                        <li><a href="pages/about.html">About Us</a></li>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Cloud Solutions</a></li>
+                        <li><a href="#">Mobile Apps</a></li>
+                        <li><a href="#">E-commerce</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Consulting</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Training</a></li>
+                        <li><a href="#">Maintenance</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Contact Info</h4>
-                    <p>Email: info@techconsultpro.com</p>
-                    <p>Phone:+977 9768434925</p>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> info@techconsultpro.com</p>
+                        <p><i class="fas fa-phone"></i> +977 9768434925</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">

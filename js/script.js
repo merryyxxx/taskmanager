@@ -1,689 +1,753 @@
-// Main JavaScript File for TechConsult Pro Website
-// Implements interactive elements, form validation, and responsive design
+// Enhanced TechConsult Pro JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all interactive features
-    initMobileNavigation();
-    initInteractiveElements();
-    initFormValidation();
-    initScrollAnimations();
-    initCounterAnimations();
-    initFloatingCards();
+    // Initialize all components
+    initMobileMenu();
+    initImageSlider();
+    initAnimations();
+    initNewsletterForm();
+    initScrollEffects();
+    initStatsCounter();
 });
 
-// Mobile Navigation Toggle
-function initMobileNavigation() {
+// Mobile Menu Toggle
+function initMobileMenu() {
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('navMenu');
     
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            
-            // Animate hamburger menu
             hamburger.classList.toggle('active');
-            
-            // Prevent body scroll when menu is open
-            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+            navMenu.classList.toggle('active');
         });
         
-        // Close menu when clicking on a link
-        const navLinks = navMenu.querySelectorAll('a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
                 hamburger.classList.remove('active');
-                document.body.style.overflow = '';
-            });
+                navMenu.classList.remove('active');
+            }
+        });
+        
+        // Close menu when window is resized
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
         });
     }
 }
 
-// Interactive 3D Elements and Hover Effects
-function initInteractiveElements() {
-    // Interactive CTA buttons with 3D effect
-    const ctaPrimary = document.getElementById('ctaPrimary');
-    const ctaSecondary = document.getElementById('ctaSecondary');
+// Image Slider Functionality
+function initImageSlider() {
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('prevSlide');
+    const nextBtn = document.getElementById('nextSlide');
     
-    if (ctaPrimary) {
-        ctaPrimary.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px) scale(1.05)';
-            this.style.boxShadow = '0 10px 25px rgba(255,107,107,0.8)';
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    
+    if (slides.length === 0) return;
+    
+    // Function to show specific slide
+    function showSlide(index) {
+        // Remove active class from all slides and dots
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // Add active class to current slide and dot
+        slides[index].classList.add('active');
+        if (dots[index]) {
+            dots[index].classList.add('active');
+        }
+        
+        currentSlide = index;
+    }
+    
+    // Next slide function
+    function nextSlide() {
+        const next = (currentSlide + 1) % totalSlides;
+        showSlide(next);
+    }
+    
+    // Previous slide function
+    function prevSlide() {
+        const prev = (currentSlide - 1 + totalSlides) % totalSlides;
+        showSlide(prev);
+    }
+    
+    // Event listeners for navigation buttons
+    if (nextBtn) {
+        nextBtn.addEventListener('click', nextSlide);
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', prevSlide);
+    }
+    
+    // Event listeners for dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => showSlide(index));
+    });
+    
+    // Auto-slide functionality
+    let autoSlideInterval = setInterval(nextSlide, 5000);
+    
+    // Pause auto-slide on hover
+    const heroSection = document.querySelector('.hero');
+    if (heroSection) {
+        heroSection.addEventListener('mouseenter', () => {
+            clearInterval(autoSlideInterval);
         });
         
-        ctaPrimary.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-            this.style.boxShadow = '0 4px 15px rgba(255,107,107,0.4)';
+        heroSection.addEventListener('mouseleave', () => {
+            autoSlideInterval = setInterval(nextSlide, 5000);
         });
     }
     
-    if (ctaSecondary) {
-        ctaSecondary.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px) scale(1.05)';
-            this.style.boxShadow = '0 10px 25px rgba(255,255,255,0.3)';
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+            prevSlide();
+        } else if (e.key === 'ArrowRight') {
+            nextSlide();
+        }
+    });
+    
+    // Touch/swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    if (heroSection) {
+        heroSection.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
         });
         
-        ctaSecondary.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-            this.style.boxShadow = 'none';
+        heroSection.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
         });
     }
     
-    // Interactive feature cards
-    const featureCards = document.querySelectorAll('.feature-card');
-    featureCards.forEach((card, index) => {
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                nextSlide(); // Swipe left - next slide
+            } else {
+                prevSlide(); // Swipe right - previous slide
+            }
+        }
+    }
+}
+
+// Animation and Scroll Effects
+function initAnimations() {
+    // Floating cards animation enhancement
+    const floatingCards = document.querySelectorAll('.floating-card');
+    floatingCards.forEach((card, index) => {
         card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-15px) rotateY(5deg)';
-            this.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
+            card.style.transform = 'translateY(-15px) scale(1.05)';
+            card.style.zIndex = '10';
         });
         
         card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) rotateY(0deg)';
-            this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
-        });
-        
-        // Add click interaction
-        card.addEventListener('click', function() {
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = 'translateY(-15px) rotateY(5deg)';
-            }, 150);
+            card.style.transform = '';
+            card.style.zIndex = '';
         });
     });
     
-    // Logo 3D interaction
-    const logo3d = document.getElementById('logo3d');
-    if (logo3d) {
-        logo3d.addEventListener('mouseenter', function() {
-            const cube = this.querySelector('.cube');
-            cube.style.animationPlayState = 'paused';
-            cube.style.transform = 'rotateX(45deg) rotateY(45deg) scale(1.1)';
+    // Feature cards hover effects
+    const featureCards = document.querySelectorAll('.feature-card');
+    featureCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            card.style.transform = 'translateY(-15px) rotateY(5deg)';
         });
         
-        logo3d.addEventListener('mouseleave', function() {
-            const cube = this.querySelector('.cube');
-            cube.style.animationPlayState = 'running';
-            cube.style.transform = '';
+        card.addEventListener('mouseleave', function() {
+            card.style.transform = '';
         });
-    }
-}
-
-// Floating Cards Interactive Animation
-function initFloatingCards() {
-    const cards = ['card1', 'card2', 'card3'];
-    
-    cards.forEach((cardId, index) => {
-        const card = document.getElementById(cardId);
-        if (card) {
-            // Add click interaction for floating cards
-            card.addEventListener('click', function() {
-                // Create ripple effect
-                const ripple = document.createElement('div');
-                ripple.style.position = 'absolute';
-                ripple.style.borderRadius = '50%';
-                ripple.style.background = 'rgba(255,255,255,0.6)';
-                ripple.style.transform = 'scale(0)';
-                ripple.style.animation = 'ripple 0.6s linear';
-                ripple.style.left = '50%';
-                ripple.style.top = '50%';
-                ripple.style.width = '20px';
-                ripple.style.height = '20px';
-                ripple.style.marginLeft = '-10px';
-                ripple.style.marginTop = '-10px';
-                
-                this.appendChild(ripple);
-                
-                // Remove ripple after animation
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-                
-                // Card bounce effect
-                this.style.transform = 'translateY(-30px) scale(1.1)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 300);
-            });
-            
-            // Random position adjustment for more dynamic feel
-            setInterval(() => {
-                if (!card.matches(':hover')) {
-                    const randomX = Math.random() * 20 - 10;
-                    const randomY = Math.random() * 20 - 10;
-                    card.style.transform = `translate(${randomX}px, ${randomY}px)`;
-                    
-                    setTimeout(() => {
-                        if (!card.matches(':hover')) {
-                            card.style.transform = '';
-                        }
-                    }, 2000);
-                }
-            }, 5000 + index * 1000);
-        }
     });
     
-    // Add ripple animation CSS
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
+    // Info boxes animation
+    const infoBoxes = document.querySelectorAll('.info-box');
+    infoBoxes.forEach(box => {
+        box.addEventListener('mouseenter', function() {
+            const icon = box.querySelector('.info-icon');
+            if (icon) {
+                icon.style.transform = 'scale(1.1) rotate(10deg)';
             }
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-// Form Validation and Interactive Features
-function initFormValidation() {
-    const forms = document.querySelectorAll('form');
-    
-    forms.forEach(form => {
-        const inputs = form.querySelectorAll('input, select, textarea');
-        
-        // Real-time validation
-        inputs.forEach(input => {
-            input.addEventListener('blur', function() {
-                validateField(this);
-            });
-            
-            input.addEventListener('input', function() {
-                clearError(this);
-                // Real-time validation for better UX
-                if (this.value.length > 0) {
-                    validateField(this);
-                }
-            });
         });
         
-        // Form submission with enhanced validation
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            let isValid = true;
-            inputs.forEach(input => {
-                if (!validateField(input)) {
-                    isValid = false;
-                }
-            });
-            
-            if (isValid) {
-                showSuccessMessage(form);
-                // Simulate form submission
-                simulateFormSubmission(form);
-            } else {
-                // Scroll to first error
-                const firstError = form.querySelector('.error-message');
-                if (firstError) {
-                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+        box.addEventListener('mouseleave', function() {
+            const icon = box.querySelector('.info-icon');
+            if (icon) {
+                icon.style.transform = '';
             }
         });
     });
 }
 
-// Enhanced Field Validation
-function validateField(field) {
-    const value = field.value.trim();
-    const fieldType = field.type;
-    const fieldName = field.name || field.id;
-    let isValid = true;
-    let errorMessage = '';
-    
-    // Clear previous errors
-    clearError(field);
-    
-    // Required field validation
-    if (field.hasAttribute('required') && !value) {
-        errorMessage = `${getFieldLabel(field)} is required.`;
-        isValid = false;
-    }
-    
-    // Specific field validations
-    if (value && isValid) {
-        switch (fieldType) {
-            case 'email':
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                    errorMessage = 'Please enter a valid email address.';
-                    isValid = false;
-                }
-                break;
-                
-            case 'tel':
-                const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-                if (!phoneRegex.test(value.replace(/[\s\-\(\)]/g, ''))) {
-                    errorMessage = 'Please enter a valid phone number.';
-                    isValid = false;
-                }
-                break;
-                
-            case 'number':
-                if (field.min && parseInt(value) < parseInt(field.min)) {
-                    errorMessage = `Value must be at least ${field.min}.`;
-                    isValid = false;
-                } else if (field.max && parseInt(value) > parseInt(field.max)) {
-                    errorMessage = `Value must be no more than ${field.max}.`;
-                    isValid = false;
-                }
-                break;
-        }
-        
-        // Name validation
-        if (fieldName.toLowerCase().includes('name') && value.length < 2) {
-            errorMessage = 'Name must be at least 2 characters long.';
-            isValid = false;
-        }
-        
-        // Age validation
-        if (fieldName.toLowerCase().includes('age')) {
-            const age = parseInt(value);
-            if (age < 13 || age > 120) {
-                errorMessage = 'Please enter a valid age (13-120).';
-                isValid = false;
-            }
-        }
-    }
-    
-    if (!isValid) {
-        showError(field, errorMessage);
-        field.style.borderColor = '#e74c3c';
-        field.style.boxShadow = '0 0 0 3px rgba(231,76,60,0.1)';
-    } else {
-        field.style.borderColor = '#27ae60';
-        field.style.boxShadow = '0 0 0 3px rgba(39,174,96,0.1)';
-    }
-    
-    return isValid;
-}
-
-// Helper Functions for Form Validation
-function getFieldLabel(field) {
-    const label = document.querySelector(`label[for="${field.id}"]`);
-    return label ? label.textContent.replace('*', '').trim() : field.name || 'This field';
-}
-
-function showError(field, message) {
-    clearError(field);
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.textContent = message;
-    field.parentNode.appendChild(errorDiv);
-}
-
-function clearError(field) {
-    const existingError = field.parentNode.querySelector('.error-message');
-    if (existingError) {
-        existingError.remove();
-    }
-    field.style.borderColor = '#ddd';
-    field.style.boxShadow = 'none';
-}
-
-function showSuccessMessage(form) {
-    // Remove existing success messages
-    const existingSuccess = form.querySelector('.success-message');
-    if (existingSuccess) {
-        existingSuccess.remove();
-    }
-    
-    const successDiv = document.createElement('div');
-    successDiv.className = 'success-message';
-    successDiv.innerHTML = `
-        <strong>Success!</strong> Your request has been submitted successfully. 
-        We'll get back to you within 24 hours.
-    `;
-    
-    form.insertBefore(successDiv, form.firstChild);
-    successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-function simulateFormSubmission(form) {
-    // Show loading state
-    const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
-    if (submitBtn) {
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Submitting...';
-        submitBtn.disabled = true;
-        
-        // Simulate API call delay
-        setTimeout(() => {
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            // Reset form after successful submission
-            form.reset();
-            // Clear all field styling
-            const fields = form.querySelectorAll('input, select, textarea');
-            fields.forEach(field => {
-                field.style.borderColor = '#ddd';
-                field.style.boxShadow = 'none';
-            });
-        }, 2000);
-    }
-}
-
-// Scroll Animations and Intersection Observer
-function initScrollAnimations() {
+// Scroll Effects and Animations
+function initScrollEffects() {
+    // Intersection Observer for fade-in animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
     
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-                
-                // Special handling for different elements
-                if (entry.target.classList.contains('feature-card')) {
-                    animateFeatureCard(entry.target);
-                } else if (entry.target.classList.contains('stat-item')) {
-                    animateCounter(entry.target);
-                }
+                entry.target.classList.add('fade-in-up');
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
     
-    // Observe elements for scroll animations
-    const elementsToAnimate = document.querySelectorAll('.feature-card, .stat-item, .floating-card');
-    elementsToAnimate.forEach(el => observer.observe(el));
-    
-    // Add CSS for scroll animations
-    const style = document.createElement('style');
-    style.textContent = `
-        .feature-card, .stat-item, .floating-card {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-        
-        .feature-card.animate-in, .stat-item.animate-in, .floating-card.animate-in {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-function animateFeatureCard(card) {
-    // Staggered animation for feature cards
-    const delay = Array.from(card.parentNode.children).indexOf(card) * 200;
-    setTimeout(() => {
-        card.style.transform = 'translateY(0) scale(1)';
-        card.style.opacity = '1';
-    }, delay);
-}
-
-// Counter Animation for Statistics
-function initCounterAnimations() {
-    const counters = document.querySelectorAll('.stat-number');
-    
-    counters.forEach(counter => {
-        const target = counter.textContent;
-        const isNumber = /^\d+/.test(target);
-        
-        if (isNumber) {
-            const finalNumber = parseInt(target.match(/\d+/)[0]);
-            counter.textContent = '0' + target.replace(/\d+/, '');
-            
-            // Store original text for animation
-            counter.dataset.target = target;
-            counter.dataset.finalNumber = finalNumber;
-        }
-    });
-}
-
-function animateCounter(statItem) {
-    const counter = statItem.querySelector('.stat-number');
-    if (!counter || !counter.dataset.finalNumber) return;
-    
-    const finalNumber = parseInt(counter.dataset.finalNumber);
-    const target = counter.dataset.target;
-    const duration = 2000;
-    const increment = finalNumber / (duration / 16);
-    let current = 0;
-    
-    const timer = setInterval(() => {
-        current += increment;
-        if (current >= finalNumber) {
-            current = finalNumber;
-            clearInterval(timer);
-        }
-        
-        counter.textContent = target.replace(/\d+/, Math.floor(current));
-    }, 16);
-}
-
-// Dynamic Content Loading and Interactive Features
-function initDynamicFeatures() {
-    // Dynamic content updates
-    updatePageContent();
-    
-    // Interactive elements
-    initParallaxEffects();
-    initSmoothScrolling();
-    
-    // Performance monitoring
-    monitorPagePerformance();
-}
-
-function updatePageContent() {
-    // Simulate dynamic content loading
-    const currentTime = new Date();
-    const timeElements = document.querySelectorAll('.current-time');
-    
-    timeElements.forEach(element => {
-        element.textContent = currentTime.toLocaleString();
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll('.feature-card, .info-box, .stat-item, .sidebar-widget');
+    animateElements.forEach(el => {
+        observer.observe(el);
     });
     
-    // Update year in footer
-    const yearElements = document.querySelectorAll('.current-year');
-    yearElements.forEach(element => {
-        element.textContent = currentTime.getFullYear();
-    });
-}
-
-function initParallaxEffects() {
-    const parallaxElements = document.querySelectorAll('.floating-card');
-    
-    window.addEventListener('scroll', () => {
+    // Parallax effect for hero section
+    window.addEventListener('scroll', function() {
         const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5;
+        const parallaxElements = document.querySelectorAll('.slide');
         
-        parallaxElements.forEach((element, index) => {
-            const speed = 0.5 + (index * 0.2);
-            element.style.transform = `translateY(${rate * speed}px)`;
+        parallaxElements.forEach(element => {
+            const speed = 0.5;
+            element.style.transform = `translateY(${scrolled * speed}px)`;
         });
+        
+        // Header background opacity on scroll
+        const header = document.querySelector('header');
+        if (header) {
+            const opacity = Math.min(scrolled / 100, 1);
+            header.style.background = `linear-gradient(135deg, rgba(102,126,234,${0.9 + opacity * 0.1}) 0%, rgba(118,75,162,${0.9 + opacity * 0.1}) 100%)`;
+        }
     });
 }
 
-function initSmoothScrolling() {
-    // Smooth scrolling for anchor links
-    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+// Stats Counter Animation
+function initStatsCounter() {
+    const stats = document.querySelectorAll('.stat-number');
+    let hasAnimated = false;
     
-    anchorLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+    function animateStats() {
+        if (hasAnimated) return;
+        
+        stats.forEach(stat => {
+            const target = parseInt(stat.textContent.replace(/\D/g, ''));
+            const suffix = stat.textContent.replace(/[0-9]/g, '');
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                stat.textContent = Math.floor(current) + suffix;
+            }, 50);
+        });
+        
+        hasAnimated = true;
+    }
+    
+    // Trigger animation when stats section is visible
+    const statsSection = document.querySelector('.stats');
+    if (statsSection) {
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        observer.observe(statsSection);
+    }
+}
+
+// Newsletter Form Handling
+function initNewsletterForm() {
+    const newsletterForm = document.querySelector('.newsletter-form');
+    
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
             
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const emailInput = newsletterForm.querySelector('input[type="email"]');
+            const submitBtn = newsletterForm.querySelector('button');
+            
+            if (emailInput && submitBtn) {
+                // Validate email
+                const email = emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (!emailRegex.test(email)) {
+                    showMessage('Please enter a valid email address.', 'error');
+                    return;
+                }
+                
+                // Simulate form submission
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                submitBtn.disabled = true;
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    emailInput.value = '';
+                    showMessage('Thank you for subscribing!', 'success');
+                    
+                    setTimeout(() => {
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                        submitBtn.disabled = false;
+                    }, 2000);
+                }, 1500);
             }
         });
-    });
+    }
 }
 
-function monitorPagePerformance() {
-    // Simple performance monitoring
-    window.addEventListener('load', () => {
-        const loadTime = performance.now();
-        console.log(`Page loaded in ${Math.round(loadTime)}ms`);
-        
-        // Show performance indicator if page loads slowly
-        if (loadTime > 3000) {
-            console.warn('Page loading time is above optimal threshold');
+// Message Display Function
+function showMessage(text, type) {
+    // Remove existing messages
+    const existingMessages = document.querySelectorAll('.message-popup');
+    existingMessages.forEach(msg => msg.remove());
+    
+    // Create message element
+    const message = document.createElement('div');
+    message.className = `message-popup ${type}`;
+    message.textContent = text;
+    
+    // Style the message
+    message.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        z-index: 10000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        ${type === 'error' ? 'background: #e74c3c;' : 'background: #27ae60;'}
+    `;
+    
+    document.body.appendChild(message);
+    
+    // Animate in
+    setTimeout(() => {
+        message.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 4 seconds
+    setTimeout(() => {
+        message.style.transform = 'translateX(100%)';
+        setTimeout(() => message.remove(), 300);
+    }, 4000);
+}
+
+// Smooth Scrolling for Internal Links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
     });
-}
-
-// Responsive Design JavaScript Implementation
-function initResponsiveFeatures() {
-    // Handle responsive layout changes
-    handleResponsiveLayout();
-    
-    // Touch events for mobile
-    initTouchEvents();
-    
-    // Orientation change handling
-    handleOrientationChange();
-}
-
-function handleResponsiveLayout() {
-    const handleResize = () => {
-        const windowWidth = window.innerWidth;
-        const isMobile = windowWidth <= 768;
-        const isTablet = windowWidth > 768 && windowWidth <= 1024;
-        
-        // Adjust layouts based on screen size
-        if (isMobile) {
-            adjustMobileLayout();
-        } else if (isTablet) {
-            adjustTabletLayout();
-        } else {
-            adjustDesktopLayout();
-        }
-    };
-    
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Initial call
-}
-
-function adjustMobileLayout() {
-    // Mobile-specific adjustments
-    const heroText = document.querySelector('.hero-text h2');
-    if (heroText) {
-        heroText.style.fontSize = '2rem';
-    }
-    
-    // Disable certain animations on mobile for performance
-    const floatingCards = document.querySelectorAll('.floating-card');
-    floatingCards.forEach(card => {
-        card.style.animation = 'none';
-        card.style.position = 'static';
-        card.style.margin = '1rem 0';
-    });
-}
-
-function adjustTabletLayout() {
-    // Tablet-specific adjustments
-    const heroText = document.querySelector('.hero-text h2');
-    if (heroText) {
-        heroText.style.fontSize = '2.5rem';
-    }
-}
-
-function adjustDesktopLayout() {
-    // Desktop-specific adjustments
-    const heroText = document.querySelector('.hero-text h2');
-    if (heroText) {
-        heroText.style.fontSize = '3rem';
-    }
-    
-    // Re-enable animations on desktop
-    const floatingCards = document.querySelectorAll('.floating-card');
-    floatingCards.forEach((card, index) => {
-        card.style.position = 'absolute';
-        card.style.animation = `float 3s ease-in-out infinite ${index}s`;
-    });
-}
-
-function initTouchEvents() {
-    // Touch-friendly interactions
-    const cards = document.querySelectorAll('.feature-card, .floating-card');
-    
-    cards.forEach(card => {
-        card.addEventListener('touchstart', function() {
-            this.style.transform = 'scale(0.95)';
-        });
-        
-        card.addEventListener('touchend', function() {
-            this.style.transform = '';
-        });
-    });
-}
-
-function handleOrientationChange() {
-    window.addEventListener('orientationchange', () => {
-        // Delay to allow for orientation change to complete
-        setTimeout(() => {
-            handleResponsiveLayout();
-            // Recalculate floating card positions
-            repositionFloatingCards();
-        }, 500);
-    });
-}
-
-function repositionFloatingCards() {
-    const cards = document.querySelectorAll('.floating-card');
-    cards.forEach((card, index) => {
-        // Reset positions for new orientation
-        card.style.transform = '';
-        setTimeout(() => {
-            card.style.opacity = '1';
-        }, index * 100);
-    });
-}
-
-// Initialize all responsive features when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    initResponsiveFeatures();
-    initDynamicFeatures();
 });
 
-// Utility Functions
-const utils = {
-    // Debounce function for performance optimization
-    debounce: function(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    },
-    
-    // Throttle function for scroll events
-    throttle: function(func, limit) {
-        let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    },
-    
-    // Format numbers with commas
-    formatNumber: function(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-};
+// Dynamic Year in Footer
+const currentYear = new Date().getFullYear();
+const footerYear = document.querySelector('.footer-bottom p');
+if (footerYear) {
+    footerYear.textContent = `© ${currentYear} TechConsult Pro. All rights reserved.`;
+}
 
-// Export functions for use in other files
-window.TechConsultPro = {
-    initMobileNavigation,
-    initFormValidation,
-    validateField,
-    utils
-};
+// Enhanced Dropdown Menu Functionality
+function initDropdownMenus() {
+    const dropdownItems = document.querySelectorAll('.nav-item.dropdown');
+    
+    dropdownItems.forEach(item => {
+        const dropdownMenu = item.querySelector('.dropdown-menu');
+        let timeoutId;
+        
+        if (dropdownMenu) {
+            item.addEventListener('mouseenter', function() {
+                clearTimeout(timeoutId);
+                dropdownMenu.style.opacity = '1';
+                dropdownMenu.style.visibility = 'visible';
+                dropdownMenu.style.transform = 'translateY(0)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                timeoutId = setTimeout(() => {
+                    dropdownMenu.style.opacity = '0';
+                    dropdownMenu.style.visibility = 'hidden';
+                    dropdownMenu.style.transform = 'translateY(-10px)';
+                }, 300);
+            });
+        }
+    });
+}
+
+// Call dropdown initialization
+initDropdownMenus();
+
+// Lazy Loading for Images
+function initLazyLoading() {
+    const images = document.querySelectorAll('img[data-src]');
+    
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// Initialize lazy loading
+initLazyLoading();
+
+// Search Functionality (if search input exists)
+function initSearch() {
+    const searchInput = document.querySelector('.search-input');
+    const searchResults = document.querySelector('.search-results');
+    
+    if (searchInput && searchResults) {
+        let searchTimeout;
+        
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+            
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        });
+        
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+    }
+}
+
+function performSearch(query) {
+    // Simulate search results
+    const mockResults = [
+        { title: 'Web Development Services', url: '#', description: 'Custom web development solutions...' },
+        { title: 'Cloud Computing Solutions', url: '#', description: 'Scalable cloud infrastructure...' },
+        { title: 'Digital Marketing Strategy', url: '#', description: 'Data-driven marketing approaches...' }
+    ];
+    
+    const searchResults = document.querySelector('.search-results');
+    if (searchResults) {
+        const filteredResults = mockResults.filter(result => 
+            result.title.toLowerCase().includes(query.toLowerCase()) ||
+            result.description.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        searchResults.innerHTML = filteredResults.map(result => `
+            <div class="search-result-item">
+                <h4><a href="${result.url}">${result.title}</a></h4>
+                <p>${result.description}</p>
+            </div>
+        `).join('');
+        
+        searchResults.style.display = filteredResults.length > 0 ? 'block' : 'none';
+    }
+}
+
+// Theme Toggle Functionality (Dark/Light Mode)
+function initThemeToggle() {
+    const themeToggle = document.querySelector('.theme-toggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Check for saved theme preference or default to system preference
+    const savedTheme = localStorage.getItem('theme');
+    const currentTheme = savedTheme || (prefersDark.matches ? 'dark' : 'light');
+    
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update toggle button icon
+            const icon = themeToggle.querySelector('i');
+            if (icon) {
+                icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        });
+    }
+    
+    // Listen for system theme changes
+    prefersDark.addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        }
+    });
+}
+
+// Initialize theme toggle
+initThemeToggle();
+
+// Back to Top Button
+function initBackToTop() {
+    // Create back to top button
+    const backToTopBtn = document.createElement('button');
+    backToTopBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+    backToTopBtn.className = 'back-to-top';
+    backToTopBtn.setAttribute('aria-label', 'Back to top');
+    
+    // Style the button
+    backToTopBtn.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+    `;
+    
+    document.body.appendChild(backToTopBtn);
+    
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.style.opacity = '1';
+            backToTopBtn.style.visibility = 'visible';
+            backToTopBtn.style.transform = 'translateY(0)';
+        } else {
+            backToTopBtn.style.opacity = '0';
+            backToTopBtn.style.visibility = 'hidden';
+            backToTopBtn.style.transform = 'translateY(20px)';
+        }
+    });
+    
+    // Scroll to top functionality
+    backToTopBtn.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+    
+    // Hover effects
+    backToTopBtn.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px) scale(1.1)';
+        this.style.boxShadow = '0 6px 20px rgba(102,126,234,0.4)';
+    });
+    
+    backToTopBtn.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+        this.style.boxShadow = '0 4px 15px rgba(102,126,234,0.3)';
+    });
+}
+
+// Initialize back to top button
+initBackToTop();
+
+// Performance Monitoring
+function initPerformanceMonitoring() {
+    // Monitor page load time
+    window.addEventListener('load', function() {
+        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+        console.log(`Page loaded in ${loadTime}ms`);
+        
+        // Send analytics if needed (placeholder)
+        // analytics.track('page_load_time', { duration: loadTime });
+    });
+    
+    // Monitor CLS (Cumulative Layout Shift)
+    let clsValue = 0;
+    let clsEntries = [];
+    
+    const observer = new PerformanceObserver((entryList) => {
+        for (const entry of entryList.getEntries()) {
+            if (!entry.hadRecentInput) {
+                clsValue += entry.value;
+                clsEntries.push(entry);
+            }
+        }
+    });
+    
+    observer.observe({ type: 'layout-shift', buffered: true });
+    
+    // Log CLS value when page becomes hidden
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'hidden') {
+            console.log('CLS:', clsValue);
+        }
+    });
+}
+
+// Initialize performance monitoring
+initPerformanceMonitoring();
+
+// Error Handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript error:', e.error);
+    // Send error to logging service if needed
+});
+
+// Service Worker Registration (for PWA capabilities)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                console.log('SW registered: ', registration);
+            })
+            .catch(function(registrationError) {
+                console.log('SW registration failed: ', registrationError);
+            });
+    });
+}
+
+// Accessibility Enhancements
+function initAccessibility() {
+    // Skip to main content link
+    const skipLink = document.createElement('a');
+    skipLink.href = '#main-content';
+    skipLink.textContent = 'Skip to main content';
+    skipLink.className = 'skip-link';
+    skipLink.style.cssText = `
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: #000;
+        color: white;
+        padding: 8px;
+        text-decoration: none;
+        border-radius: 4px;
+        z-index: 10000;
+        transition: top 0.3s;
+    `;
+    
+    skipLink.addEventListener('focus', function() {
+        this.style.top = '6px';
+    });
+    
+    skipLink.addEventListener('blur', function() {
+        this.style.top = '-40px';
+    });
+    
+    document.body.insertBefore(skipLink, document.body.firstChild);
+    
+    // Add main content ID if it doesn't exist
+    const mainContent = document.querySelector('main');
+    if (mainContent && !mainContent.id) {
+        mainContent.id = 'main-content';
+    }
+    
+    // Enhance keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        // ESC key to close modals, dropdowns, etc.
+        if (e.key === 'Escape') {
+            // Close mobile menu
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+            if (hamburger && navMenu) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+            
+            // Close dropdowns
+            const dropdowns = document.querySelectorAll('.dropdown-menu');
+            dropdowns.forEach(dropdown => {
+                dropdown.style.opacity = '0';
+                dropdown.style.visibility = 'hidden';
+                dropdown.style.transform = 'translateY(-10px)';
+            });
+        }
+    });
+    
+    // Announce dynamic content changes to screen readers
+    function announceToScreenReader(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'sr-only';
+        announcement.style.cssText = `
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        `;
+        
+        document.body.appendChild(announcement);
+        announcement.textContent = message;
+        
+        setTimeout(() => {
+            document.body.removeChild(announcement);
+        }, 1000);
+    }
+    
+    // Make announcements for slider changes
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+            announceToScreenReader(`Slide ${index + 1} of ${dots.length} selected`);
+        });
+    });
+}
+
+// Initialize accessibility enhancements
+initAccessibility();
+
+// Console welcome message
+console.log(`
+%c🚀 TechConsult Pro Website Loaded Successfully! 
+%cVersion: 2.0.0
+%cFeatures: Responsive Design, Image Slider, Interactive Components
+%cDeveloped with ❤️ for modern web experiences
+`, 
+'color: #667eea; font-size: 16px; font-weight: bold;',
+'color: #764ba2; font-size: 12px;',
+'color: #ff6b6b; font-size: 12px;',
+'color: #4ecdc4; font-size: 12px;'
+);
